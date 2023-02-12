@@ -25,6 +25,11 @@ constexpr const char *const RANK_NAMES[] = {
   "Ace"    // ACE
 };
 
+
+
+
+
+
 //REQUIRES str represents a valid rank ("Two", "Three", ..., "Ace")
 Rank string_to_rank(const std::string &str) {
   for(int r = TWO; r <= ACE; ++r) {
@@ -44,8 +49,9 @@ std::ostream & operator<<(std::ostream &os, Rank rank) {
 //EFFECTS Reads a Rank from a stream, for example "Two" -> TWO
 std::istream & operator>>(std::istream &is, Rank &rank) {
   string str;
-  is >> str;
-  rank = string_to_rank(str);
+  if(is >> str) {
+    rank = string_to_rank(str);
+  }
   return is;
 }
 
@@ -79,8 +85,9 @@ std::ostream & operator<<(std::ostream &os, Suit suit) {
 //EFFECTS Reads a Suit from a stream, for example "Spades" -> SPADES
 std::istream & operator>>(std::istream &is, Suit &suit) {
   string str;
-  is >> str;
-  suit = string_to_suit(str);
+  if (is >> str) {
+    suit = string_to_suit(str);
+  }
   return is;
 }
 
@@ -99,8 +106,13 @@ std::istream & operator>>(std::istream &is, Suit &suit) {
 //   operator>=
 //   operator==
 //   operator!=
-class Card{
-  public:
+
+
+
+
+
+//class Card{
+ // public:
 
   Card(){
     suit = SPADES;
@@ -200,15 +212,16 @@ class Card{
     }
   }
 
-  private:
-  Rank rank;
-  Suit suit;
+ // private:
+ // Rank rank;
+ // Suit suit;
 
   // This "friend declaration" allows the implementation of operator>>
   // to access private member variables of the Card class.
   friend std::istream & operator>>(std::istream &is, Card &card);
+  
 
-};
+//};
 
 
 std::ostream & operator<<(std::ostream &os, const Card &card){
@@ -217,24 +230,10 @@ std::ostream & operator<<(std::ostream &os, const Card &card){
   Rank rank = card1.get_rank();
   Suit suit = card1.get_suit();
 
-  os << rank << " of " << suit << endl;
+  return os << rank << " of " << suit << endl;
+
 }
 
-std::istream & operator>>(std::istream &is, Rank &rank) {
-  string str;
-  if(is >> str) {
-    rank = string_to_rank(str);
-  }
-  return is;
-}
-
-std::istream & operator>>(std::istream &is, Suit &suit) {
-  string str;
-  if (is >> str) {
-    suit = string_to_suit(str);
-  }
-  return is;
-}
 
 bool operator<(const Card &lhs, const Card &rhs){
 
@@ -363,7 +362,7 @@ Suit Suit_next(Suit suit){
   if(suit == 0){
     return CLUBS;
   }
-
+  return SPADES;
 }
 
 //EFFECTS Returns true if a is lower value than b.  Uses trump to determine
@@ -389,7 +388,7 @@ bool Card_less(const Card &a, const Card &b, Suit trump){
     }
 
   }
-
+  return 0;
 }
 
 //EFFECTS Returns true if a is lower value than b.  Uses both the trump suit
@@ -404,7 +403,6 @@ bool Card_less(const Card &a, const Card &b, const Card &led_card, Suit trump){
   //i didn't wanna have 4 conditions in 1 if statement because it looked dumb and bad so 
   //my thought process is to return 0 at the end that way if all of the rest of the conditions
   //are unmet for any of the if statements then it just isn't true becaus they're both losers
-  Rank ledRank = led_card.get_rank();
   Suit ledSuit = led_card.get_suit();
 
   Rank br = b.get_rank();
