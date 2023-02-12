@@ -108,31 +108,25 @@ std::istream & operator>>(std::istream &is, Suit &suit) {
 //   operator!=
 
 
-
-
-
-//class Card{
- // public:
-
-  Card(){
+Card::Card(){
     suit = SPADES;
     rank = TWO;
-  };
+  }
 
-  Card(Rank rank_in, Suit suit_in){
+Card::Card(Rank rank_in, Suit suit_in){
     rank= rank_in;
     suit= suit_in;
   }
 
-  Rank get_rank() const{
+Card::Rank get_rank() const{
     return rank;
   }
 
-  Suit get_suit() const{
+Card::Suit get_suit() const{
     return suit;
   }
 
-  Suit get_suit(Suit trump) const{
+Card::Suit get_suit(Suit trump) const{
     if(is_left_bower(trump) == 1){
       return trump;
     }
@@ -141,7 +135,7 @@ std::istream & operator>>(std::istream &is, Suit &suit) {
     }
   }
 
-  bool is_face_or_ace() const{
+Card::bool is_face_or_ace() const{
     if(rank == ACE || JACK || QUEEN || KING){
       return 1;
     }
@@ -150,7 +144,7 @@ std::istream & operator>>(std::istream &is, Suit &suit) {
     }
   }
 
-  bool is_right_bower(Suit trump) const{
+Card::bool is_right_bower(Suit trump) const{
     if(suit == trump && rank == JACK){
       return 1;
     }
@@ -159,7 +153,7 @@ std::istream & operator>>(std::istream &is, Suit &suit) {
     }
   }
 
-  bool is_left_bower(Suit trump) const{
+Card::bool is_left_bower(Suit trump) const{
     if(trump == SPADES || trump == CLUBS){
       if(trump == SPADES){
         if(suit == CLUBS && rank == JACK){
@@ -203,7 +197,7 @@ std::istream & operator>>(std::istream &is, Suit &suit) {
 
   }
 
-  bool is_trump(Suit trump) const{
+Card::bool is_trump(Suit trump) const{
     if(suit == trump){
       return 1;
     }
@@ -211,17 +205,6 @@ std::istream & operator>>(std::istream &is, Suit &suit) {
       return 0;
     }
   }
-
- // private:
- // Rank rank;
- // Suit suit;
-
-  // This "friend declaration" allows the implementation of operator>>
-  // to access private member variables of the Card class.
-  friend std::istream & operator>>(std::istream &is, Card &card);
-  
-
-//};
 
 
 std::ostream & operator<<(std::ostream &os, const Card &card){
