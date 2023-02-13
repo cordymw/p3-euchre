@@ -137,21 +137,14 @@ std::istream & operator>>(std::istream &is, Suit &suit) {
   }
 
   bool Card::is_face_or_ace() const{
-    if(rank == ACE || JACK || QUEEN || KING){
-      return 1;
-    }
-    else{
-      return 0;
-    }
+    return rank == ACE || 
+          rank == JACK || 
+          rank == QUEEN || 
+          rank == KING;
   }
 
   bool Card::is_right_bower(Suit trump) const{
-    if(suit == trump && rank == JACK){
-      return 1;
-    }
-    else{
-      return 0;
-    }
+    return suit == trump && rank == JACK;
   }
 
   bool Card::is_left_bower(Suit trump) const{
@@ -195,7 +188,7 @@ std::istream & operator>>(std::istream &is, Suit &suit) {
         }
       }
     }
-
+    return 0;
   }
 
   bool Card::is_trump(Suit trump) const{
