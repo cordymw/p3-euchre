@@ -1,6 +1,7 @@
 // Project UID 1d9f47bfc76643019cfbf037641defe1
 #include "Pack.h"
 #include <cassert>
+#include <cmath>
 #include <iostream>
 
 using namespace std;
@@ -48,7 +49,42 @@ void Pack::reset()
 
 void Pack::shuffle()
 {
-  
+  // create arrays to store half of deck each
+  Card *h1 = new Card[PACK_SIZE / 2];
+  Card *h2 = new Card[PACK_SIZE / 2];
+  const int NUM_SHUFFLES = 7;
+  const int HALF = PACK_SIZE / 2;
+
+  // shuffle loop
+  for (int shuffle = 0; shuffle < NUM_SHUFFLES; shuffle++)
+  {
+    // split deck in two halves
+    for (int i = 0; i < PACK_SIZE; i++)
+    {
+      if (i < HALF)
+      {
+        h1[i] = cards[i];
+      }
+      else 
+      {
+        h2[i - HALF] = cards[i];
+      }
+    }
+
+    // combine halves, alternating, starting with h2
+    for (int i = 0; i < PACK_SIZE; i += 2)
+    {
+      cards[i] = h2[i / 2];
+    }
+    for (int i = 1; i < PACK_SIZE; i += 2)
+    {
+      cards[i] = h1[i / 2];
+    }
+  }
+
+  delete[] h1;
+  delete[] h2; 
+  next = 0;
 }
 
 bool Pack::empty() const
