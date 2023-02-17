@@ -109,11 +109,6 @@ std::istream & operator>>(std::istream &is, Suit &suit) {
 
 
 
-
-
-//class Card{
- // public:
-
   Card::Card(){
     suit = SPADES;
     rank = TWO;
@@ -142,30 +137,20 @@ std::istream & operator>>(std::istream &is, Suit &suit) {
   }
 
   bool Card::is_face_or_ace() const{
-
-    for(int i=0; i<9; ++i){
-
-    if(rank == i){
-
-      return 0;
-    }
-  
+    return rank == ACE || 
+          rank == JACK || 
+          rank == QUEEN || 
+          rank == KING;
   }
-  return 1;
-  }
+
   bool Card::is_right_bower(Suit trump) const{
-    if(suit == trump && rank == JACK){
-      return 1;
-    }
-    else{
-      return 0;
-    }
+    return suit == trump && rank == JACK;
   }
 
   bool Card::is_left_bower(Suit trump) const{
-    if(trump == 0 || trump == 2){
-      if(trump == 2){
-        if(suit == 0 && rank == JACK){
+    if(trump == SPADES || trump == CLUBS){
+      if(trump == SPADES){
+        if(suit == CLUBS && rank == JACK){
           return 1;
         }
         else{
@@ -173,8 +158,8 @@ std::istream & operator>>(std::istream &is, Suit &suit) {
         }
       }
 
-      if(trump == 0){
-        if(suit == 2 && rank == JACK){
+      if(trump == CLUBS){
+        if(suit == SPADES && rank == JACK){
           return 1;
         }
         else{
@@ -184,9 +169,9 @@ std::istream & operator>>(std::istream &is, Suit &suit) {
     }
 
 
-      if(trump == 1 || trump == 3){
-      if(trump == 1){
-        if(suit == 3 && rank == JACK){
+      if(trump == HEARTS || trump == DIAMONDS){
+      if(trump == HEARTS){
+        if(suit == DIAMONDS && rank == JACK){
           return 1;
         }
         else{
@@ -194,8 +179,8 @@ std::istream & operator>>(std::istream &is, Suit &suit) {
         }
       }
       
-      if(trump == 3){
-        if(suit == 1 && rank == JACK){
+      if(trump == DIAMONDS){
+        if(suit == HEARTS && rank == JACK){
           return 1;
         }
         else{
@@ -214,18 +199,6 @@ std::istream & operator>>(std::istream &is, Suit &suit) {
       return 0;
     }
   }
-
- // private:
- // Rank rank;
- // Suit suit;
-
-  // This "friend declaration" allows the implementation of operator>>
-  // to access private member variables of the Card class.
-
-  std::istream & operator>>(std::istream &is, Card &card);
-  
-
-//};
 
 
 std::ostream & operator<<(std::ostream &os, const Card &card){
@@ -450,7 +423,6 @@ bool Card_less(const Card &a, const Card &b, const Card &led_card, Suit trump){
 return 0;
 
 }
-
 
 
 
