@@ -211,6 +211,18 @@ std::ostream & operator<<(std::ostream &os, const Card &card){
 
 }
 
+std::istream & operator>>(std::istream &is, Card &card)
+{
+  string rank;
+  string junk;
+  string suit;
+
+  is >> rank >> junk >> suit;
+  card.rank = string_to_rank(rank);
+  card.suit = string_to_suit(suit);
+  return is;
+}
+
 
 bool operator<(const Card &lhs, const Card &rhs){
 
