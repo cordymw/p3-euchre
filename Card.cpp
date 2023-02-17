@@ -383,7 +383,6 @@ bool Card_less(const Card &a, const Card &b, Suit trump){
 //EFFECTS Returns true if a is lower value than b.  Uses both the trump suit
 //  and the suit led to determine order, as described in the spec.
 bool Card_less(const Card &a, const Card &b, const Card &led_card, Suit trump){
-  assert(false); //implement pls
   //if card b is the led suit and a isnt trump, true:: made
   //if card b is led suit and a is trump, false:: made
   //if card b is trump and card a is trump, if rank b > a, true:: made
