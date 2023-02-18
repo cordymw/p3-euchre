@@ -4,12 +4,13 @@
 #include "Card.h"
 #include "Pack.h"
 #include "Player.h"
+#include "euchre.h"
 
 using namespace std;
 
 
 
-int main() {
+int main(int argc, char **argv) {
   
   if(1 == 2){//if there's an error using command line arguments
     cout << "Usage: euchre.exe PACK_FILENAME [shuffle|noshuffle] "
