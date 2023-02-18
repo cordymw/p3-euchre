@@ -26,10 +26,6 @@ constexpr const char *const RANK_NAMES[] = {
 };
 
 
-
-
-
-
 //REQUIRES str represents a valid rank ("Two", "Three", ..., "Ace")
 Rank string_to_rank(const std::string &str) {
   for(int r = TWO; r <= ACE; ++r) {
@@ -107,99 +103,122 @@ std::istream & operator>>(std::istream &is, Suit &suit) {
 //   operator==
 //   operator!=
 
+Card::Card()
+{
+  suit = SPADES;
+  rank = TWO;
+}
 
+Card::Card(Rank rank_in, Suit suit_in)
+{
+  rank = rank_in;
+  suit = suit_in;
+}
 
-  Card::Card(){
-    suit = SPADES;
-    rank = TWO;
+Rank Card::get_rank() const
+{
+  return rank;
+}
+
+Suit Card::get_suit() const
+{
+  return suit;
+}
+
+Suit Card::get_suit(Suit trump) const
+{
+  if (is_left_bower(trump) == 1)
+  {
+    return trump;
   }
-
-  Card::Card(Rank rank_in, Suit suit_in){
-    rank= rank_in;
-    suit= suit_in;
-  }
-
-  Rank Card::get_rank() const{
-    return rank;
-  }
-
-  Suit Card::get_suit() const{
+  else
+  {
     return suit;
   }
+}
 
-  Suit Card::get_suit(Suit trump) const{
-    if(is_left_bower(trump) == 1){
-      return trump;
+bool Card::is_face_or_ace() const
+{
+  return rank == ACE ||
+         rank == JACK ||
+         rank == QUEEN ||
+         rank == KING;
+}
+
+bool Card::is_right_bower(Suit trump) const
+{
+  return suit == trump && rank == JACK;
+}
+
+bool Card::is_left_bower(Suit trump) const
+{
+  if (trump == SPADES || trump == CLUBS)
+  {
+    if (trump == SPADES)
+    {
+      if (suit == CLUBS && rank == JACK)
+      {
+        return 1;
+      }
+      else
+      {
+        return 0;
+      }
     }
-    else{
-      return suit;
+
+    if (trump == CLUBS)
+    {
+      if (suit == SPADES && rank == JACK)
+      {
+        return 1;
+      }
+      else
+      {
+        return 0;
+      }
     }
   }
 
-  bool Card::is_face_or_ace() const{
-    return rank == ACE || 
-          rank == JACK || 
-          rank == QUEEN || 
-          rank == KING;
-  }
-
-  bool Card::is_right_bower(Suit trump) const{
-    return suit == trump && rank == JACK;
-  }
-
-  bool Card::is_left_bower(Suit trump) const{
-    if(trump == SPADES || trump == CLUBS){
-      if(trump == SPADES){
-        if(suit == CLUBS && rank == JACK){
-          return 1;
-        }
-        else{
-          return 0;
-        }
+  if (trump == HEARTS || trump == DIAMONDS)
+  {
+    if (trump == HEARTS)
+    {
+      if (suit == DIAMONDS && rank == JACK)
+      {
+        return 1;
       }
-
-      if(trump == CLUBS){
-        if(suit == SPADES && rank == JACK){
-          return 1;
-        }
-        else{
-          return 0;
-        }
+      else
+      {
+        return 0;
       }
     }
 
-
-      if(trump == HEARTS || trump == DIAMONDS){
-      if(trump == HEARTS){
-        if(suit == DIAMONDS && rank == JACK){
-          return 1;
-        }
-        else{
-          return 0;
-        }
+    if (trump == DIAMONDS)
+    {
+      if (suit == HEARTS && rank == JACK)
+      {
+        return 1;
       }
-      
-      if(trump == DIAMONDS){
-        if(suit == HEARTS && rank == JACK){
-          return 1;
-        }
-        else{
-          return 0;
-        }
+      else
+      {
+        return 0;
       }
     }
+  }
+  return 0;
+}
+
+bool Card::is_trump(Suit trump) const
+{
+  if (suit == trump)
+  {
+    return 1;
+  }
+  else
+  {
     return 0;
   }
-
-  bool Card::is_trump(Suit trump) const{
-    if(suit == trump){
-      return 1;
-    }
-    else{
-      return 0;
-    }
-  }
-
+}
 
 std::ostream & operator<<(std::ostream &os, const Card &card){
 
@@ -207,7 +226,7 @@ std::ostream & operator<<(std::ostream &os, const Card &card){
   Rank rank = card1.get_rank();
   Suit suit = card1.get_suit();
 
-  return os << rank << " of " << suit << endl;
+  return os << rank << " of " << suit;
 
 }
 
@@ -365,8 +384,6 @@ bool Card_less(const Card &a, const Card &b, Suit trump){
     return 0;
   }
 
-
-
   if(a.get_suit() != trump && b.get_suit() != trump){
 
     if(b.get_rank() > a.get_rank()){
@@ -399,28 +416,25 @@ bool Card_less(const Card &a, const Card &b, const Card &led_card, Suit trump){
   Rank ar = a.get_rank();
   Suit as = a.get_suit();
 
-  if(bs == ledSuit && as != trump){
+  if (as == trump)
+  {
+    if (bs == trump)
+    {
+      return ar < br;
+    }
     return 1;
   }
-  else{
-    return 0;
-  }
 
-  if(bs == ledSuit && as == trump){
-    return 0;
-  }
-
-  if(bs == trump && as == trump){
-    if(br > ar){
-      return 1;
+  if (as == ledSuit)
+  {
+    if (bs == ledSuit)
+    {
+      return ar < br;
     }
-    else{
-      return 0;
-    }
+    return 1;
   }
 
-return 0;
-
+  return ar < br;
 }
 
 
