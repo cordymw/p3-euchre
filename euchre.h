@@ -9,5 +9,20 @@ using namespace std;
 
 
 
+class Game {
 
+public:
+
+
+
+
+
+
+
+private:
+
+vector <Player*> players;
+Pack pack;
+
+};
 
