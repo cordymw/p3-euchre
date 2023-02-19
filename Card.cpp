@@ -399,15 +399,8 @@ bool Card_less(const Card &a, const Card &b, Suit trump){
 
 //EFFECTS Returns true if a is lower value than b.  Uses both the trump suit
 //  and the suit led to determine order, as described in the spec.
-bool Card_less(const Card &a, const Card &b, const Card &led_card, Suit trump){
-  //if card b is the led suit and a isnt trump, true:: made
-  //if card b is led suit and a is trump, false:: made
-  //if card b is trump and card a is trump, if rank b > a, true:: made
-  //if neither led suit and neither trump, false since they're both automiatic losers:: implemented in the final return 0
-
-  //i didn't wanna have 4 conditions in 1 if statement because it looked dumb and bad so 
-  //my thought process is to return 0 at the end that way if all of the rest of the conditions
-  //are unmet for any of the if statements then it just isn't true becaus they're both losers
+bool Card_less(const Card &a, const Card &b, const Card &led_card, Suit trump)
+{
   Suit ledSuit = led_card.get_suit();
 
   Rank br = b.get_rank();
