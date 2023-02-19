@@ -2,15 +2,13 @@
 
 #include <iostream>
 #include <fstream>
-#include "Card.h"
-#include "Pack.h"
-#include "Player.h"
 #include "euchre.h"
 
 using namespace std;
 
 int main(int argc, char **argv) 
 {
+  // perform initial checks
   if (
       // check 12 args
       argc != 12 || 
@@ -45,4 +43,38 @@ int main(int argc, char **argv)
     cout << "Error opening " << argv[1] << endl;
     return 1;
   }
+
+
+}
+
+void Game::play_game()
+{
+  set_cards();
+  while (t1_pts < pt_target && t2_pts < pt_target)
+  {
+    play_hand();
+  }
+}
+
+void Game::play_hand()
+{
+  const int NUM_TRICKS = 5;
+  int winning_team;
+  deal();
+  set_up_card();
+  set_leader();
+
+  play_round_1();
+
+  for (int trick = 0; trick < NUM_TRICKS; trick++)
+  {
+    play_trick();
+  }
+  determine_winning_team(winning_team);
+  add_points(winning_team);
+}
+
+void Game::deal()
+{
+
 }

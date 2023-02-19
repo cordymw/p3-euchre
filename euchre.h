@@ -7,30 +7,41 @@
 
 using namespace std;
 
+class Game 
+{
+    public:
+        Game();
+        Game(vector<Player*> p, string s);
 
+        void play_game();
+        void set_cards();
+        void play_hand();
+        void play_round_1();
+        void play_round_2();
+        void play_trick();
+        void play_card();
+        void set_point_target();
+        void set_trump_suit();
+        void set_up_card();
+        void set_led_suit();
+        void determine_winning_team(int team);
+        void deal();
+        void set_leader();
+        void order_up();
+        void add_points(int team);
+        void move_leader();
 
-class Game {
-
-public:
-
-Game(Player &p1, Player &p2, Player &p3, Player &p4, Pack pack, int winpts);
-
-
-
-
-
-
-
-private:
-
-vector <Player*> players;
-Pack pack;
-int points2win; //maybe..?
-
-int p1pts;
-int p2pts;
-int p3pts;
-int p4pts;
-
+    private:
+        Pack pack;
+        int pt_target;
+        bool shuffle;
+        vector<Player*> players;
+        Player *dealer;
+        Card upcard;
+        Suit trump_suit;
+        Suit led_suit;
+        int t1 = 1;
+        int t2 = 2;
+        int t1_pts;
+        int t2_pts;
 };
-
