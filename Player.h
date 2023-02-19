@@ -24,6 +24,13 @@ class Player {
   //EFFECTS  adds Card c to Player's hand
   virtual void add_card(const Card &c) = 0;
 
+  //EFFECTS  tells the person what size the players hand it
+  virtual int hand_size() = 0;
+
+  //REQUIRES  index is less than size or max hand size
+  //EFFECTS  returns the card at specified index in players hand
+  virtual Card hand_at(int index) = 0;
+
   //REQUIRES round is 1 or 2
   //MODIFIES order_up_suit
   //EFFECTS If Player wishes to order up a trump suit then return true and
