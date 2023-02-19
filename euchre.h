@@ -13,6 +13,8 @@ class Game {
 
 public:
 
+Game(Player &p1, Player &p2, Player &p3, Player &p4, Pack pack, int winpts);
+
 
 
 
@@ -23,6 +25,12 @@ private:
 
 vector <Player*> players;
 Pack pack;
+int points2win; //maybe..?
+
+int p1pts;
+int p2pts;
+int p3pts;
+int p4pts;
 
 };
 
