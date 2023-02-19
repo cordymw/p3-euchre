@@ -13,14 +13,11 @@ using namespace std;
 
 class Simple : public Player{
 
+  public:
+
   //constructor time baybee
-  Simple(){
-    name;
-    hand;
-  }
   Simple(const string name_in){
     name= name_in;
-    hand;
   }
 
     //EFFECTS returns player's name
@@ -414,7 +411,7 @@ class Simple : public Player{
 
   private:
 
- const string name;
+ string name;
  vector <Card> hand;
 };
 
@@ -424,14 +421,11 @@ class Simple : public Player{
 
 class Human : public Player{
 
+  public:
+
   //constructor time baybee
-  Human(){
-    name;
-    hand;
-  }
   Human(const string name_in){
     name= name_in;
-    hand;
   }
         //EFFECTS returns player's name
   const std::string & get_name() const{
@@ -445,6 +439,8 @@ class Human : public Player{
     assert(hand.size() < MAX_HAND_SIZE);
 
     hand.push_back(c);
+
+    sort(hand.begin(), hand.end());
   }
 
 
@@ -475,8 +471,13 @@ class Human : public Player{
                           int round, Suit &order_up_suit) const{
     assert(round == 1 || 2);
 
-  sort(hand.begin(), hand.end());
+
+  
+
   print_hand();
+
+
+  
   
   cout << "Human player " << name << ", please enter a suit, or \"pass\":\n";
   string decision;
@@ -484,6 +485,7 @@ class Human : public Player{
 
 if (decision != "pass") {
   Suit ordered_up = string_to_suit(decision);
+  cout << "Ordered-up Suit is: " << ordered_up << endl;
   return 1;
 }
 
@@ -496,10 +498,12 @@ return 0;
   void add_and_discard(const Card &upcard){
     assert(hand.size() >= 1);
 
-    hand.push_back(upcard);
-    
-    sort(hand.begin(), hand.end());
+    add_card(upcard);
+
     print_hand();
+
+
+
     cout << "Discard upcard: [-1]\n";
     cout << "Human player " << name << ", please select a card to discard:\n";
 
@@ -507,7 +511,7 @@ return 0;
     cin >> index;
 
     int upin = 0;
-    if(index = -1){
+    if(index == -1){
       
       for(int i = 0; i < hand.size(); ++i){
 
@@ -530,14 +534,16 @@ return 0;
   Card lead_card(Suit trump){
     assert(hand.size() >= 1);
 
-    sort(hand.begin(), hand.end());
-
+    
     print_hand();
+
+
     cout << "Human player " << name << ", please select a card:\n";
 
     int index;
     cin >> index;
 
+    return hand[index];
     hand.erase(hand.begin() + index);
   }
 
@@ -547,20 +553,24 @@ return 0;
   Card play_card(const Card &led_card, Suit trump){
   assert(hand.size() >= 1);
 
-  sort(hand.begin(), hand.end());
+  
 
   print_hand();
+
+
+
   cout << "Human player " << name << ", please select a card:\n";
 
   int index;
   cin >> index;
 
+  return hand[index];
   hand.erase(hand.begin() + index);
   }
 
   private:
 
-  const string name;
+  string name;
   vector <Card> hand;
   
   void print_hand() const {
@@ -577,11 +587,11 @@ return 0;
 Player * Player_factory(const std::string &name, const std::string &strategy) {
 
    if (strategy == "Simple") {
-    return new Simple::Simple(name);
+    return new Simple(name);
   
 
     if (strategy == "Human") {
-    return new Human::Human(name);
+    return new Human(name);
   }
    }
 assert(false);
@@ -591,6 +601,6 @@ assert(false);
 //EFFECTS: Prints player's name to os
 std::ostream & operator<<(std::ostream &os, const Player &p) {
   
-  os << p.get_name() << endl;
+ return os << p.get_name() << endl;
 
 }
