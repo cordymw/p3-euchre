@@ -147,41 +147,114 @@ TEST(test_play_card_simple) {
 //HUMAN
 
 TEST(test_make_trump_human) {
-    Player * alice = Player_factory("Alice", "Simple");
+    Player * alice = Player_factory("Alice", "Human");
     
     
+    Card one(NINE, HEARTS);
+    Card two(TEN, DIAMONDS);
+    Card three(JACK, SPADES);
+    Card four(QUEEN, CLUBS);
+    Card five(ACE, HEARTS);
 
+    alice->add_card(one);
+    alice->add_card(two);
+    alice->add_card(three);
+    alice->add_card(four);
+    alice->add_card(five);
+
+    Card upcard(TEN, SPADES);
+
+    //when testing i will enter HEARTS and say yes
+    bool is_dealer = 0;
+    int round = 1;
+    Suit order_up;
+
+    bool real = alice->make_trump(upcard, is_dealer, round, order_up);
+
+    ASSERT_EQUAL(real, 1);
 
 
     delete alice;
 }
 
 TEST(test_add_discard_human) {
-    Player * alice = Player_factory("Alice", "Simple");
+    Player * alice = Player_factory("Alice", "Human");
     
     
+    Card one(NINE, HEARTS);
+    Card two(TEN, DIAMONDS);
+    Card three(JACK, SPADES);
+    Card four(QUEEN, CLUBS);
+    Card five(ACE, HEARTS);
 
+    alice->add_card(one);
+    alice->add_card(two);
+    alice->add_card(three);
+    alice->add_card(four);
+    alice->add_card(five);
 
+    Card upcard(TEN, SPADES);
+
+    //i will choose to get rid of card one, 9 of hearts
+    alice->add_and_discard(upcard);
+
+    for(int i= 0; i<5; ++i){
+
+        Card test = alice->hand_at(i);
+
+        ASSERT_NOT_EQUAL(test, one);
+
+    }
 
     delete alice;
 }
 
 TEST(test_lead_card_human) {
-    Player * alice = Player_factory("Alice", "Simple");
+    Player * alice = Player_factory("Alice", "Human");
     
     
+    Card one(NINE, HEARTS);
+    Card two(TEN, DIAMONDS);
+    Card three(JACK, SPADES);
+    Card four(QUEEN, CLUBS);
+    Card five(ACE, HEARTS);
 
+    alice->add_card(one);
+    alice->add_card(two);
+    alice->add_card(three);
+    alice->add_card(four);
+    alice->add_card(five);
 
+    Suit trump = SPADES;
+    Card test = alice->lead_card(trump);
+    //i will choose to play the jack of spades, card three
+    ASSERT_EQUAL(test, three);
 
     delete alice;
 }
 
 TEST(test_play_card_human) {
-    Player * alice = Player_factory("Alice", "Simple");
+    Player * alice = Player_factory("Alice", "Human");
     
     
+    Card one(NINE, HEARTS);
+    Card two(TEN, DIAMONDS);
+    Card three(JACK, SPADES);
+    Card four(QUEEN, CLUBS);
+    Card five(ACE, HEARTS);
 
+    alice->add_card(one);
+    alice->add_card(two);
+    alice->add_card(three);
+    alice->add_card(four);
+    alice->add_card(five);
 
+    Suit trump = SPADES;
+    Card led(ACE, DIAMONDS);
+
+    Card test = alice->play_card(led, trump);
+    //i will choose to play the jack of spades, card three
+    ASSERT_EQUAL(test, three);
 
     delete alice;
 }
