@@ -14,16 +14,15 @@ class Game
         Game(Pack c, bool s, int pts, vector<Player*> p);
 
         void play_game();
-        void play_hand();
-        void play_round_1();
-        void play_round_2();
-        void play_trick();
+        void play_hand(int hand);
+        Suit play_round_1();
+        void play_trick(Suit trump);
         void set_point_target();
         void set_trump_suit();
         void set_up_card();
         void set_led_suit();
         void determine_winning_team(int team);
-        void deal(Player* person, int count);
+        void deal(vector <Player *>);
         void add_points(int team);
         void move_leader();
 
