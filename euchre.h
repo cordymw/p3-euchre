@@ -18,7 +18,6 @@ class Game
         void play_round_1();
         void play_round_2();
         void play_trick();
-        void play_card();
         void set_point_target();
         void set_trump_suit();
         void set_up_card();

@@ -95,14 +95,14 @@ void Game::play_hand()
   const int NUM_TRICKS = 5;
   int winning_team;
 
-  deal(players[0], 3);
-  deal(players[1], 2);
-  deal(players[2], 3);
-  deal(players[3], 2);
-  deal(players[0], 2);
   deal(players[1], 3);
   deal(players[2], 2);
   deal(players[3], 3);
+  deal(players[0], 2);
+  deal(players[1], 2);
+  deal(players[2], 3);
+  deal(players[3], 2);
+  deal(players[0], 3);
 
   set_up_card();
   set_leader();
@@ -113,6 +113,7 @@ void Game::play_hand()
   {
     play_trick();
   }
+
   determine_winning_team(winning_team);
   add_points(winning_team);
 }
