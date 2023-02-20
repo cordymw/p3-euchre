@@ -24,9 +24,8 @@ class Game
         void set_up_card();
         void set_led_suit();
         void determine_winning_team(int team);
-        void deal();
+        void deal(Player* person, int count);
         void set_leader();
-        void order_up();
         void add_points(int team);
         void move_leader();
 
@@ -36,11 +35,12 @@ class Game
         bool shuffle;
         vector<Player*> players;
         Player *dealer;
+        Player *leader;
         Card upcard;
         Suit trump_suit;
         Suit led_suit;
-        int t1 = 1;
-        int t2 = 2;
-        int t1_pts = 0;
-        int t2_pts = 0;
+        const int t1 = 1;
+        const int t2 = 2;
+        int t1_pts;
+        int t2_pts;
 };

@@ -78,6 +78,8 @@ Game::Game(Pack c, bool s, int pts, vector<Player*> p)
   pt_target = pts;
   players = p;
   dealer = players[0];
+  t1_pts = 0;
+  t2_pts = 0;
 }
 
 void Game::play_game()
@@ -92,7 +94,16 @@ void Game::play_hand()
 {
   const int NUM_TRICKS = 5;
   int winning_team;
-  deal();
+
+  deal(players[0], 3);
+  deal(players[1], 2);
+  deal(players[2], 3);
+  deal(players[3], 2);
+  deal(players[0], 2);
+  deal(players[1], 3);
+  deal(players[2], 2);
+  deal(players[3], 3);
+
   set_up_card();
   set_leader();
 
@@ -106,7 +117,30 @@ void Game::play_hand()
   add_points(winning_team);
 }
 
-void Game::deal()
+void Game::deal(Player* person, int count)
 {
+  for (int i = 0; i < count; i++)
+  {
+    person->add_card(pack.deal_one());
+  }
+}
 
+void Game::set_up_card()
+{
+  upcard = pack.deal_one();
+}
+
+void Game::set_leader()
+{
+  leader = dealer + 1;
+}
+
+void Game::play_round_1()
+{
+  bool trump_made = 0;
+  int i = 0;
+  while (trump_made = 0 && i < 4)
+  {
+    
+  }
 }
