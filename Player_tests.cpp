@@ -14,19 +14,26 @@ TEST(test_player_get_name) {
     delete alice;
 }
 
-TEST(test_add_card_and_handsize_and_handat) {
-    Player * alice = Player_factory("Alice", "Simple");
-    
-    Card test(NINE, HEARTS);
-    alice->add_card(test);
-
-    ASSERT_EQUAL(alice->hand_size(), 1);
-
-
-    Card pls = alice->hand_at(0);
-    ASSERT_EQUAL(pls, test);
+TEST(test_player_get_name_human) {
+    Player * alice = Player_factory("Alice", "Human");
+    ASSERT_EQUAL("Alice", alice->get_name());
 
     delete alice;
+}
+
+TEST(test_add_card_and_handsize_and_handat) {
+    Player * alic = Player_factory("Alice", "Simple");
+    
+    Card test(NINE, HEARTS);
+    alic->add_card(test);
+
+    ASSERT_EQUAL(alic->hand_size(), 1);
+
+
+    Card pls = alic->hand_at(0);
+    ASSERT_EQUAL(pls, test);
+
+    delete alic;
 }
 
 
@@ -35,34 +42,34 @@ TEST(test_add_card_and_handsize_and_handat) {
 
 
 TEST(test_make_trump_simple) {
-    Player * alice = Player_factory("Alice", "Simple");
+    Player * ali = Player_factory("Alice", "Simple");
 
     Card one(NINE, HEARTS);
     Card two(TEN, DIAMONDS);
     Card three(JACK, SPADES);
-    Card four(QUEEN, CLUBS);
+    Card four(QUEEN, SPADES);
     Card five(ACE, HEARTS);
 
-    alice->add_card(one);
-    alice->add_card(two);
-    alice->add_card(three);
-    alice->add_card(four);
-    alice->add_card(five);
+    ali->add_card(one);
+    ali->add_card(two);
+    ali->add_card(three);
+    ali->add_card(four);
+    ali->add_card(five);
 
     Card upcard(TEN, SPADES);
     bool is_dealer = 0;
     int round = 1;
     Suit order_up;
 
-    bool real = alice->make_trump(upcard, is_dealer, round, order_up);
+    bool real = ali->make_trump(upcard, is_dealer, round, order_up);
 
     assert(real == 1);
 
-    delete alice;
+    delete ali;
 }
 
 TEST(test_add_discard_simple) {
-    Player * alice = Player_factory("Alice", "Simple");
+    Player * al = Player_factory("Alice", "Simple");
     
     Card one(NINE, HEARTS);
     Card two(TEN, DIAMONDS);
@@ -70,29 +77,29 @@ TEST(test_add_discard_simple) {
     Card four(QUEEN, CLUBS);
     Card five(ACE, HEARTS);
 
-    alice->add_card(one);
-    alice->add_card(two);
-    alice->add_card(three);
-    alice->add_card(four);
-    alice->add_card(five);
+    al->add_card(one);
+    al->add_card(two);
+    al->add_card(three);
+    al->add_card(four);
+    al->add_card(five);
 
     Card upcard(TEN, SPADES);
 
-    alice->add_and_discard(upcard);
+    al->add_and_discard(upcard);
 
     for(int i= 0; i<5; ++i){
 
-        Card test = alice->hand_at(i);
+        Card test = al->hand_at(i);
 
         ASSERT_NOT_EQUAL(test, one);
 
     }
 
-    delete alice;
+    delete al;
 }
 
 TEST(test_lead_card_simple) {
-    Player * alice = Player_factory("Alice", "Simple");
+    Player * a = Player_factory("Alice", "Simple");
     
     
     Card one(NINE, HEARTS);
@@ -101,22 +108,22 @@ TEST(test_lead_card_simple) {
     Card four(QUEEN, CLUBS);
     Card five(ACE, HEARTS);
 
-    alice->add_card(one);
-    alice->add_card(two);
-    alice->add_card(three);
-    alice->add_card(four);
-    alice->add_card(five);
+    a->add_card(one);
+    a->add_card(two);
+    a->add_card(three);
+    a->add_card(four);
+    a->add_card(five);
 
-    Card test= alice->lead_card(HEARTS);
+    Card test= a->lead_card(HEARTS);
 
     ASSERT_EQUAL(test, four);
 
 
-    delete alice;
+    delete a;
 }
 
 TEST(test_play_card_simple) {
-    Player * alice = Player_factory("Alice", "Simple");
+    Player * lice = Player_factory("Alice", "Simple");
     
     
     Card one(NINE, HEARTS);
@@ -125,20 +132,20 @@ TEST(test_play_card_simple) {
     Card four(QUEEN, CLUBS);
     Card five(ACE, HEARTS);
 
-    alice->add_card(one);
-    alice->add_card(two);
-    alice->add_card(three);
-    alice->add_card(four);
-    alice->add_card(five);
+    lice->add_card(one);
+    lice->add_card(two);
+    lice->add_card(three);
+    lice->add_card(four);
+    lice->add_card(five);
 
     Card led(QUEEN, SPADES);
 
-    Card test = alice->play_card(led, HEARTS);
+    Card test = lice->play_card(led, HEARTS);
 
     ASSERT_EQUAL(test, three);
 
 
-    delete alice;
+    delete lice;
 }
 
 
@@ -147,7 +154,7 @@ TEST(test_play_card_simple) {
 //HUMAN
 
 TEST(test_make_trump_human) {
-    Player * alice = Player_factory("Alice", "Human");
+    Player * ice = Player_factory("Alice", "Human");
     
     
     Card one(NINE, HEARTS);
@@ -156,11 +163,11 @@ TEST(test_make_trump_human) {
     Card four(QUEEN, CLUBS);
     Card five(ACE, HEARTS);
 
-    alice->add_card(one);
-    alice->add_card(two);
-    alice->add_card(three);
-    alice->add_card(four);
-    alice->add_card(five);
+    ice->add_card(one);
+    ice->add_card(two);
+    ice->add_card(three);
+    ice->add_card(four);
+    ice->add_card(five);
 
     Card upcard(TEN, SPADES);
 
@@ -169,16 +176,16 @@ TEST(test_make_trump_human) {
     int round = 1;
     Suit order_up;
 
-    bool real = alice->make_trump(upcard, is_dealer, round, order_up);
+    bool real = ice->make_trump(upcard, is_dealer, round, order_up);
 
     ASSERT_EQUAL(real, 1);
 
 
-    delete alice;
+    delete ice;
 }
 
 TEST(test_add_discard_human) {
-    Player * alice = Player_factory("Alice", "Human");
+    Player * ce = Player_factory("Alice", "Human");
     
     
     Card one(NINE, HEARTS);
@@ -187,30 +194,30 @@ TEST(test_add_discard_human) {
     Card four(QUEEN, CLUBS);
     Card five(ACE, HEARTS);
 
-    alice->add_card(one);
-    alice->add_card(two);
-    alice->add_card(three);
-    alice->add_card(four);
-    alice->add_card(five);
+    ce->add_card(one);
+    ce->add_card(two);
+    ce->add_card(three);
+    ce->add_card(four);
+    ce->add_card(five);
 
     Card upcard(TEN, SPADES);
 
     //i will choose to get rid of card one, 9 of hearts
-    alice->add_and_discard(upcard);
+    ce->add_and_discard(upcard);
 
     for(int i= 0; i<5; ++i){
 
-        Card test = alice->hand_at(i);
+        Card test = ce->hand_at(i);
 
         ASSERT_NOT_EQUAL(test, one);
 
     }
 
-    delete alice;
+    delete ce;
 }
 
 TEST(test_lead_card_human) {
-    Player * alice = Player_factory("Alice", "Human");
+    Player * e = Player_factory("Alice", "Human");
     
     
     Card one(NINE, HEARTS);
@@ -219,22 +226,22 @@ TEST(test_lead_card_human) {
     Card four(QUEEN, CLUBS);
     Card five(ACE, HEARTS);
 
-    alice->add_card(one);
-    alice->add_card(two);
-    alice->add_card(three);
-    alice->add_card(four);
-    alice->add_card(five);
+    e->add_card(one);
+    e->add_card(two);
+    e->add_card(three);
+    e->add_card(four);
+    e->add_card(five);
 
     Suit trump = SPADES;
-    Card test = alice->lead_card(trump);
+    Card test = e->lead_card(trump);
     //i will choose to play the jack of spades, card three
     ASSERT_EQUAL(test, three);
 
-    delete alice;
+    delete e;
 }
 
 TEST(test_play_card_human) {
-    Player * alice = Player_factory("Alice", "Human");
+    Player * aalice = Player_factory("Alice", "Human");
     
     
     Card one(NINE, HEARTS);
@@ -243,20 +250,20 @@ TEST(test_play_card_human) {
     Card four(QUEEN, CLUBS);
     Card five(ACE, HEARTS);
 
-    alice->add_card(one);
-    alice->add_card(two);
-    alice->add_card(three);
-    alice->add_card(four);
-    alice->add_card(five);
+    aalice->add_card(one);
+    aalice->add_card(two);
+    aalice->add_card(three);
+    aalice->add_card(four);
+    aalice->add_card(five);
 
     Suit trump = SPADES;
     Card led(ACE, DIAMONDS);
 
-    Card test = alice->play_card(led, trump);
+    Card test = aalice->play_card(led, trump);
     //i will choose to play the jack of spades, card three
     ASSERT_EQUAL(test, three);
 
-    delete alice;
+    delete aalice;
 }
 
 
