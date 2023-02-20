@@ -78,6 +78,7 @@ Game::Game(Pack c, bool s, int pts, vector<Player*> p)
   pt_target = pts;
   players = p;
   dealer = players[0];
+  leader = dealer + 1;
   t1_pts = 0;
   t2_pts = 0;
 }
@@ -95,18 +96,14 @@ void Game::play_hand()
   const int NUM_TRICKS = 5;
   int winning_team;
 
-  deal(players[1], 3);
-  deal(players[2], 2);
-  deal(players[3], 3);
-  deal(players[0], 2);
-  deal(players[1], 2);
-  deal(players[2], 3);
-  deal(players[3], 2);
-  deal(players[0], 3);
+  if (shuffle == 1)
+  {
+    pack.shuffle();
+  }
+
+  deal();
 
   set_up_card();
-  set_leader();
-
   play_round_1();
 
   for (int trick = 0; trick < NUM_TRICKS; trick++)
@@ -118,11 +115,28 @@ void Game::play_hand()
   add_points(winning_team);
 }
 
-void Game::deal(Player* person, int count)
+void Game::deal()
 {
-  for (int i = 0; i < count; i++)
+  int count_order[] = {3, 2, 3, 2, 2, 3, 2, 3};
+  int player_order[8];
+  int start_element = leader - dealer;
+
+  for (int i = 0; i < 8; i++)
   {
-    person->add_card(pack.deal_one());
+    player_order[i] = start_element;
+    start_element++;
+    if (start_element > 3)
+    {
+      start_element = 0;
+    }
+  }
+
+  for (int i = 0; i < 8; i++)
+  {
+    for (int count = 0; count < count_order[i]; count++)
+    {
+      players[player_order[i]]->add_card(pack.deal_one());
+    }
   }
 }
 
@@ -131,17 +145,13 @@ void Game::set_up_card()
   upcard = pack.deal_one();
 }
 
-void Game::set_leader()
-{
-  leader = dealer + 1;
-}
-
 void Game::play_round_1()
 {
   bool trump_made = 0;
+  
   int i = 0;
   while (trump_made = 0 && i < 4)
   {
-    
+   
   }
 }

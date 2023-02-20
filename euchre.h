@@ -24,7 +24,6 @@ class Game
         void set_led_suit();
         void determine_winning_team(int team);
         void deal(Player* person, int count);
-        void set_leader();
         void add_points(int team);
         void move_leader();
 
