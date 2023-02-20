@@ -50,14 +50,14 @@ int main(int argc, char **argv)
 
   // set up players
   vector<Player*> players;
-  for (int i = 0; i < 8; i += 2)
+  for (int i = 4; i < 12; i += 2)
   {
     int j = i + 1;
     players.push_back(Player_factory(argv[i], argv[j]));
   }
 
   // set up shuffle
-  bool shuffle;
+  bool shuffle = 0;
   if (argv[2] == "shuffle") 
   {
     shuffle = 1;
