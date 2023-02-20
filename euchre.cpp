@@ -44,12 +44,44 @@ int main(int argc, char **argv)
     return 1;
   }
 
+  // set up game pack
+  Pack game_pack(inFile);
+  inFile.close();
 
+  // set up players
+  vector<Player*> players;
+  for (int i = 0; i < 8; i += 2)
+  {
+    int j = i + 1;
+    players.push_back(Player_factory(argv[i], argv[j]));
+  }
+
+  // set up shuffle
+  bool shuffle;
+  if (argv[2] == "shuffle") 
+  {
+    shuffle = 1;
+  }
+
+  Game game(game_pack, shuffle, atoi(argv[3]), players);
+  game.play_game();
+
+  return 0;
+}
+
+Game::Game(){} 
+
+Game::Game(Pack c, bool s, int pts, vector<Player*> p) 
+{
+  pack = c;
+  shuffle = s;
+  pt_target = pts;
+  players = p;
+  dealer = players[0];
 }
 
 void Game::play_game()
 {
-  set_cards();
   while (t1_pts < pt_target && t2_pts < pt_target)
   {
     play_hand();

@@ -11,10 +11,9 @@ class Game
 {
     public:
         Game();
-        Game(vector<Player*> p, string s);
+        Game(Pack c, bool s, int pts, vector<Player*> p);
 
         void play_game();
-        void set_cards();
         void play_hand();
         void play_round_1();
         void play_round_2();
@@ -42,6 +41,6 @@ class Game
         Suit led_suit;
         int t1 = 1;
         int t2 = 2;
-        int t1_pts;
-        int t2_pts;
+        int t1_pts = 0;
+        int t2_pts = 0;
 };
