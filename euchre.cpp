@@ -85,14 +85,22 @@ Game::Game(Pack c, bool s, int pts, vector<Player*> p)
 
 void Game::play_game()
 {
+  int handNum = 0;
   while (t1_pts < pt_target && t2_pts < pt_target)
   {
-    play_hand();
+    play_hand(handNum);
+    ++handNum;
   }
 }
 
-void Game::play_hand()
+void Game::play_hand(int handNum)
 {
+
+  //announce hand, upcard, and dealer
+  cout << "Hand" << handNum << endl;
+  cout << dealer << "deals" << endl;
+
+
   const int NUM_TRICKS = 5;
   int winning_team;
 
@@ -101,21 +109,23 @@ void Game::play_hand()
     pack.shuffle();
   }
 
-  deal();
+  deal(players);
 
   set_up_card();
-  play_round_1();
+  cout<< upcard << "turned up" << endl;
+
+  Suit trump = play_round_1();
 
   for (int trick = 0; trick < NUM_TRICKS; trick++)
   {
-    play_trick();
+    play_trick(trump);
   }
 
   determine_winning_team(winning_team);
   add_points(winning_team);
 }
 
-void Game::deal()
+void Game::deal(vector <Player *>)
 {
   int count_order[] = {3, 2, 3, 2, 2, 3, 2, 3};
   int player_order[8];
@@ -145,13 +155,82 @@ void Game::set_up_card()
   upcard = pack.deal_one();
 }
 
-void Game::play_round_1()
+
+
+Suit Game::play_round_1()
 {
   bool trump_made = 0;
+  Suit order_suit = upcard.get_suit();
   
   int i = 0;
   while (trump_made = 0 && i < 4)
   {
-   
+
+  int round = 1;
+  while(round < 3){
+
+   for(int i=0; i < players.size(); ++i){
+
+    players[i]->make_trump(upcard, dealer, round, order_suit);
+    ++round;
+   }
+   }
+  cout << players[i]->get_name() << "passes" << endl;
+   ++i;
+
   }
+
+  //player[i] is the one who made trump
+  Suit trump = order_suit;
+  cout << players[i]->get_name() << "orders up" << trump << endl;
+  dealer->add_and_discard(upcard);
+
+  return trump;
+
 }
+
+
+
+void Game::play_trick(Suit trump)
+{
+
+  Card one = leader->lead_card(trump);
+
+  int player[4];
+  int index;
+  players[index] = leader;
+
+  Card two;
+  Card three;
+  Card four;
+
+  for(int i= 1; i < 4; ++i){
+
+    if(i =1){
+      two = players[index]->play_card(one, trump);
+    }
+
+    if(i= 2){
+      three = players[index]->play_card(one, trump);
+    }
+
+    if(i=3){
+      four = players[index]->play_card(one, trump);
+    }
+
+    ++index;
+
+    if(index = 4){
+      index = 0;
+    }
+  }
+
+  //team 1 = players[0] and players[2]
+  //team 2 = players[1] and players[3]
+  if(Card_less(one, two, one, trump) == 0 && Card_less(one, four, one, trump) == 0
+   || Card_less(three, two, one, trump) == 0 && Card_less(three, four, one, trump) == 0){
+    ++t1_pts;
+   }
+   else{
+    ++t2_pts;
+   }
