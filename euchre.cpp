@@ -109,23 +109,23 @@ void Game::play_hand(int handNum)
     pack.shuffle();
   }
 
-  deal(players);
+  deal();
 
   set_up_card();
   cout<< upcard << "turned up" << endl;
 
-  Suit trump = play_round_1();
+  trump_suit = play_round_1();
 
   for (int trick = 0; trick < NUM_TRICKS; trick++)
   {
-    play_trick(trump);
+    play_trick();
   }
 
   determine_winning_team(winning_team);
   add_points(winning_team);
 }
 
-void Game::deal(vector <Player *>)
+void Game::deal()
 {
   int count_order[] = {3, 2, 3, 2, 2, 3, 2, 3};
   int player_order[8];
@@ -181,20 +181,20 @@ Suit Game::play_round_1()
   }
 
   //player[i] is the one who made trump
-  Suit trump = order_suit;
-  cout << players[i]->get_name() << "orders up" << trump << endl;
+  trump_suit = order_suit;
+  cout << players[i]->get_name() << "orders up" << trump_suit << endl;
   dealer->add_and_discard(upcard);
 
-  return trump;
+  return trump_suit;
 
 }
 
 
 
-void Game::play_trick(Suit trump)
+void Game::play_trick()
 {
 
-  Card one = leader->lead_card(trump);
+  Card one = leader->lead_card(trump_suit);
 
   int player[4];
   int index;
@@ -207,15 +207,15 @@ void Game::play_trick(Suit trump)
   for(int i= 1; i < 4; ++i){
 
     if(i =1){
-      two = players[index]->play_card(one, trump);
+      two = players[index]->play_card(one, trump_suit);
     }
 
     if(i= 2){
-      three = players[index]->play_card(one, trump);
+      three = players[index]->play_card(one, trump_suit);
     }
 
     if(i=3){
-      four = players[index]->play_card(one, trump);
+      four = players[index]->play_card(one, trump_suit);
     }
 
     ++index;
@@ -227,8 +227,8 @@ void Game::play_trick(Suit trump)
 
   //team 1 = players[0] and players[2]
   //team 2 = players[1] and players[3]
-  if(Card_less(one, two, one, trump) == 0 && Card_less(one, four, one, trump) == 0
-   || Card_less(three, two, one, trump) == 0 && Card_less(three, four, one, trump) == 0){
+  if(Card_less(one, two, one, trump_suit) == 0 && Card_less(one, four, one, trump_suit) == 0
+   || Card_less(three, two, one, trump_suit) == 0 && Card_less(three, four, one, trump_suit) == 0){
     ++t1_pts;
    }
    else{
