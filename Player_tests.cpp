@@ -21,17 +21,15 @@ TEST(test_player_get_name_human) {
     delete alice;
 }
 
-TEST(test_add_card_and_handsize_and_handat) {
+TEST(test_add_card) {
     Player * alic = Player_factory("Alice", "Simple");
     
     Card test(NINE, HEARTS);
     alic->add_card(test);
 
-    ASSERT_EQUAL(alic->hand_size(), 1);
+    Card pretend_upcard(TEN,HEARTS);
 
-
-    Card pls = alic->hand_at(0);
-    ASSERT_EQUAL(pls, test);
+    ASSERT_EQUAL(alic->play_card(pretend_upcard, HEARTS), test);
 
     delete alic;
 }
@@ -73,7 +71,7 @@ TEST(test_add_discard_simple) {
     
     Card one(NINE, HEARTS);
     Card two(TEN, DIAMONDS);
-    Card three(JACK, SPADES);
+    Card three(JACK, DIAMONDS);
     Card four(QUEEN, CLUBS);
     Card five(ACE, HEARTS);
 
@@ -87,13 +85,13 @@ TEST(test_add_discard_simple) {
 
     al->add_and_discard(upcard);
 
-    for(int i= 0; i<5; ++i){
+    Card weed(ACE, SPADES);
+    Card pls = al->play_card(weed, SPADES);//al would play nine of hearts if its in their hand
+    //since they cant follow suit and its the lowest rank card in their hand
 
-        Card test = al->hand_at(i);
+    ASSERT_NOT_EQUAL(pls, one);
 
-        ASSERT_NOT_EQUAL(test, one);
-
-    }
+    
 
     delete al;
 }
@@ -202,17 +200,14 @@ TEST(test_add_discard_human) {
 
     Card upcard(TEN, SPADES);
 
-    //i will choose to get rid of card one, 9 of hearts
+    //i will choose to get rid of index 0, 9 of hearts
     ce->add_and_discard(upcard);
 
-    for(int i= 0; i<5; ++i){
+    Card weed(ACE, SPADES);
+    Card pls = ce->play_card(weed, SPADES);//al would play nine of hearts if its in their hand
+    //since they cant follow suit and its the lowest rank card in their hand
 
-        Card test = ce->hand_at(i);
-
-        ASSERT_NOT_EQUAL(test, one);
-
-    }
-
+    ASSERT_NOT_EQUAL(pls, one);
     delete ce;
 }
 
@@ -234,7 +229,7 @@ TEST(test_lead_card_human) {
 
     Suit trump = SPADES;
     Card test = e->lead_card(trump);
-    //i will choose to play the jack of spades, card three
+    //i will choose to play the jack of spades, index two
     ASSERT_EQUAL(test, three);
 
     delete e;
@@ -260,7 +255,7 @@ TEST(test_play_card_human) {
     Card led(ACE, DIAMONDS);
 
     Card test = aalice->play_card(led, trump);
-    //i will choose to play the jack of spades, card three
+    //i will choose to play the jack of spades, index two
     ASSERT_EQUAL(test, three);
 
     delete aalice;
