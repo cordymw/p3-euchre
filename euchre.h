@@ -10,22 +10,16 @@ using namespace std;
 class Game 
 {
     public:
-        Game();
-        Game(Pack c, bool s, int pts, vector<Player*> p);
+        Game();//identified
+        Game(Pack c, bool s, int pts, vector<Player*> p);//identified
 
-        void play_game();
-        void play_hand(int handNum);
-        Suit play_round_1();
-        void play_round_2();
-        void play_trick();
-        void set_point_target();
-        void set_trump_suit();
-        void set_up_card();
-        void set_led_suit();
-        void determine_winning_team(int team);
-        void deal();
-        void add_points(int team);
-        void move_leader();
+        void play_game();//identified
+        void play_hand(int handNum);//identified
+        Suit play_round_1();//identified
+        void play_trick();//identified
+        void set_up_card();//identified
+        void deal();//identified
+        Player * maker;
 
     private:
         Pack pack;
@@ -33,7 +27,9 @@ class Game
         bool shuffle;
         vector<Player*> players;
         Player *dealer;
+        int dealer_index;
         Player *leader;
+        int leader_index = 0;
         Card upcard;
         Suit trump_suit;
         Suit led_suit;
@@ -41,4 +37,6 @@ class Game
         const int t2 = 2;
         int t1_pts;
         int t2_pts;
+        int temp_t1;
+        int temp_t2;
 };
