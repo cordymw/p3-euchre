@@ -36,24 +36,6 @@ class Simple : public Player{
   }
 
 
-  //EFFECTS  tells the person what size the players hand it
-  int hand_size(){
-
-    return hand.size();
-
-  }
-
-
-  //REQUIRES  index is less than size or max hand size
-  //EFFECTS  returns the card at specified index in players hand
-  Card hand_at(int index){
-    assert(index <= hand.size());
-
-    return hand[index];
-
-  }
-
-
   //REQUIRES round is 1 or 2
   //MODIFIES order_up_suit
   //EFFECTS If Player wishes to order up a trump suit then return true and
@@ -82,8 +64,8 @@ class Simple : public Player{
 
 
       if(count >= 2){
-        return 1;
         order_up_suit = upcard.get_suit();
+        return 1;
       }
 
 
@@ -112,8 +94,8 @@ class Simple : public Player{
         }
       }
        if(count >=1){
-        return 1;
         order_up_suit = good;
+        return 1;
         }}
 
 
@@ -135,8 +117,8 @@ class Simple : public Player{
         }
       }
        if(count >=1){
-        return 1;
         order_up_suit = good;
+        return 1;
         }}
 
 
@@ -158,8 +140,8 @@ class Simple : public Player{
         }
       }
       if(count >=1){
-        return 1;
         order_up_suit = good;
+        return 1;
         }}
 
 
@@ -182,15 +164,15 @@ class Simple : public Player{
         }
       }
       if(count >=1){
-        return 1;
         order_up_suit = good;
+        return 1;
       }}
 
      
 
       if(is_dealer == 1){
-      return 1;
       order_up_suit = upcard.get_suit();
+      return 1;
     }
     }
 
@@ -338,6 +320,7 @@ class Simple : public Player{
     //follow suit code
     Suit goodsuit = led_card.get_suit();
     int maxrank = 0;
+    int minrank = 12;
     int index = 0;
 
     for(int i= 0; i < hand.size(); ++i){
@@ -352,7 +335,7 @@ class Simple : public Player{
       }
       
 
-      //just in case wither of them is a bower here's what we gotta do
+      //just in case either of them is a bower here's what we gotta do
 
       if(hand[i].is_left_bower(goodsuit) == 1){
         break;
@@ -393,12 +376,11 @@ class Simple : public Player{
 
   if(count == hand.size()){
     index = 0;
-    maxrank = 0;
 
     for(int i= 0; i < hand.size(); ++i){
 
-      if(hand[i].get_rank() > maxrank){
-        maxrank = hand[i].get_rank();
+      if(hand[i].get_rank() < minrank){
+        minrank = hand[i].get_rank();
         index = i;
       }
     }
@@ -414,6 +396,9 @@ class Simple : public Player{
  string name;
  vector <Card> hand;
 };
+
+
+
 
 
 
@@ -436,29 +421,11 @@ class Human : public Player{
   //EFFECTS  adds Card c to Player's hand
   void add_card(const Card &c){
 
-    assert(hand.size() < MAX_HAND_SIZE);
+  //assert(hand.size() < MAX_HAND_SIZE);
 
-    hand.push_back(c);
+  hand.push_back(c);
 
-    sort(hand.begin(), hand.end());
-  }
-
-
-//EFFECTS  tells the person what size the players hand it
-  int hand_size(){
-
-    return hand.size();
-
-  }
-
-
-  //REQUIRES  index is less than size or max hand size
-  //EFFECTS  returns the card at specified index in players hand
-  Card hand_at(int index){
-    assert(index <= hand.size());
-
-    return hand[index];
-
+  sort(hand.begin(), hand.end());
   }
 
 
@@ -588,19 +555,20 @@ Player * Player_factory(const std::string &name, const std::string &strategy) {
 
    if (strategy == "Simple") {
     return new Simple(name);
-  
+   }
 
     if (strategy == "Human") {
     return new Human(name);
   }
-   }
-assert(false);
+   
+   return 0;
 }
 
 
 //EFFECTS: Prints player's name to os
 std::ostream & operator<<(std::ostream &os, const Player &p) {
   
- return os << p.get_name() << endl;
+os << p.get_name();
+return os;
 
 }
