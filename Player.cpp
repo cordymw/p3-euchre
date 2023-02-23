@@ -306,8 +306,9 @@ class Simple : public Player{
     }
   }
   
-    return hand[index];
-    hand.erase(hand.begin()+index);
+  Card returned = hand[index];
+  hand.erase(hand.begin() + index);
+  return returned;
 
 }
 
@@ -317,15 +318,14 @@ class Simple : public Player{
   Card play_card(const Card &led_card, Suit trump){
     assert(hand.size() >= 1);
 
-    //follow suit code
-    Suit goodsuit = led_card.get_suit();
+    int index = 0;
     int maxrank = 0;
     int minrank = 12;
-    int index = 0;
 
-    for(int i= 0; i < hand.size(); ++i){
+    //follow suit code
+    for(int i = 0; i < hand.size(); ++i){
 
-      if(hand[i].get_suit() == goodsuit){
+      if(hand[i].get_suit() == led_card.get_suit()){
 
         if(hand[i].get_rank() > maxrank){
 
@@ -333,63 +333,58 @@ class Simple : public Player{
           index = i;
         }
       }
-      
-
-      //just in case either of them is a bower here's what we gotta do
-
-      if(hand[i].is_left_bower(goodsuit) == 1){
-        break;
-      }
-      if(hand[i].is_right_bower(goodsuit) == 1){
-        break;
-      }
     }
 
-    for(int i= 0; i < hand.size(); ++i){
+    //bower check
+    for(int i = 0; i < hand.size(); ++i){
 
-    if(hand[i].is_left_bower(trump) == 1){
+      if((led_card.get_suit() == trump) && (hand[i].get_suit() == led_card.get_suit())){
+
+        if(hand[i].is_left_bower(trump) == 1){
 
           index = i;
-          break;
         }
-    }
-
-  for(int i= 0; i < hand.size(); ++i){
-    
-    if(hand[i].is_right_bower(trump) == 1){
-
-          index = i;
-          break;
-        }
-    }
-  
-
-    //no leading suit cards code
-
-  int count = 0;
-  for(int i= 0; i < hand.size(); ++i){
-
-    if(hand[i].get_suit() != goodsuit){
-      ++count;
-    }
-  }
-
-  if(count == hand.size()){
-    index = 0;
-
-    for(int i= 0; i < hand.size(); ++i){
-
-      if(hand[i].get_rank() < minrank){
-        minrank = hand[i].get_rank();
-        index = i;
       }
     }
-  }
-    return hand[index];
-    hand.erase(hand.begin()+index);
-  }
 
+    for(int i = 0; i < hand.size(); ++i){
 
+      if((led_card.get_suit() == trump) && (hand[i].get_suit() == led_card.get_suit())){
+
+        if(hand[i].is_right_bower(trump) == 1){
+
+          index = i;
+        }
+      }
+    }
+
+    //cannot follow suit code
+    int count = 0;
+
+    for(int i = 0; i < hand.size(); ++i){
+      if(led_card.get_suit() != hand[i].get_suit()){
+        ++count;
+      }
+    }
+
+    if(count == hand.size()){
+
+      for(int i = 0; i < hand.size(); ++i){
+
+        if(hand[i].get_rank() < minrank){
+
+          minrank = hand[i].get_rank();
+          index = i;
+
+        }
+      }
+    }
+
+    //make a copy of card to play, delete real card, return copy
+    Card copy = hand[index];
+    hand.erase(hand.begin() + index);
+    return copy;
+  }
 
   private:
 
@@ -451,8 +446,7 @@ class Human : public Player{
   cin >> decision;
 
 if (decision != "pass") {
-  Suit ordered_up = string_to_suit(decision);
-  cout << "Ordered-up Suit is: " << ordered_up << endl;
+  order_up_suit = string_to_suit(decision);
   return 1;
 }
 
@@ -510,8 +504,9 @@ return 0;
     int index;
     cin >> index;
 
-    return hand[index];
+    Card returned = hand[index];
     hand.erase(hand.begin() + index);
+    return returned;
   }
 
   //REQUIRES Player has at least one card
@@ -531,8 +526,9 @@ return 0;
   int index;
   cin >> index;
 
-  return hand[index];
+  Card returned = hand[index];
   hand.erase(hand.begin() + index);
+  return returned;
   }
 
   private:
