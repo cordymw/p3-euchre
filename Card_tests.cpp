@@ -45,4 +45,132 @@ Card c(ACE, HEARTS);
 ASSERT_EQUAL(c.is_trump(HEARTS), 1);
 }
 
+TEST(card_less_one){
+
+Card a(KING, CLUBS);
+
+Card b(ACE, CLUBS);
+
+bool test = Card_less(b, a, a, HEARTS);
+
+ASSERT_EQUAL(test, 0);
+
+}
+
+TEST(johnny_test){
+
+Card one(JACK, DIAMONDS);
+
+Card two(JACK, HEARTS);
+
+Card led(NINE, DIAMONDS);
+
+bool test = Card_less(one, two, one, HEARTS);
+
+ASSERT_EQUAL(test, 1);
+
+}
+
+TEST(get_rank){
+
+Card test(NINE, SPADES);
+
+ASSERT_EQUAL(test.get_rank(), NINE);
+
+}
+
+TEST(get_suit){
+
+Card test(NINE, SPADES);
+
+ASSERT_EQUAL(test.get_suit(), SPADES);
+
+}
+
+TEST(get_suit_leftBower){
+
+Card test(JACK, SPADES);
+
+ASSERT_EQUAL(test.get_suit(CLUBS), CLUBS);
+
+}
+
+TEST(os_lessThan_op){
+
+Card one(JACK, SPADES);
+
+Card two(TEN, DIAMONDS);
+
+ASSERT_EQUAL((two < one), 1);
+
+}
+
+TEST(less_pr_equal1){
+
+Card one(JACK, SPADES);
+
+Card two(ACE, DIAMONDS);
+
+ASSERT_EQUAL((one <= two), 1);
+
+}
+
+TEST(less_or_equal2){
+
+Card one(JACK, SPADES);
+
+Card two(JACK, DIAMONDS);
+
+ASSERT_EQUAL((one <= two), 1);
+
+}
+
+TEST(suit_next){
+
+Suit suit = SPADES;
+
+ASSERT_EQUAL(Suit_next(suit), HEARTS);
+
+}
+
+TEST(is_equal_to){
+
+Card one(NINE, HEARTS);
+
+Card two(NINE, DIAMONDS);
+
+ASSERT_EQUAL((one == two), 1);
+
+}
+
+TEST(greater_equal_1){
+
+Card one(TEN, SPADES);
+
+Card two(JACK, DIAMONDS);
+
+ASSERT_EQUAL((two >= one), 1);
+
+}
+
+TEST(greater_equal_2){
+
+Card one(JACK, SPADES);
+
+Card two(JACK, DIAMONDS);
+
+ASSERT_EQUAL((two >= one), 1);
+
+}
+
+TEST(greater_than){
+
+Card one(TEN, SPADES);
+
+Card two(JACK, DIAMONDS);
+
+ASSERT_EQUAL((two > one), 1);
+
+}
+
 TEST_MAIN()
