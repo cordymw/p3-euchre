@@ -232,17 +232,32 @@ class Simple : public Player{
   //EFFECTS  Leads one Card from Player's hand according to their strategy
   //  "Lead" means to play the first Card in a trick.  The card
   //  is removed the player's hand.
+
+
+  //strat:
+  // When a Simple Player leads a trick, they play the 
+  // highest non-trump card in their hand. If they have only 
+  // trump cards, they play the highest trump card in their hand.
+
   Card lead_card(Suit trump){
     assert(hand.size() >= 1);
 
-  int index = 0;
+  int index;
   int maxrank = 0;
 
+
+  //highest non-trump
    for(int i= 0; i < hand.size(); ++i){
 
       if(hand[i].get_suit() != trump){
 
-        if(hand[i].get_rank() > maxrank){
+        if(hand[i].is_left_bower(trump) == 1){
+
+          maxrank = maxrank;
+
+        }
+
+        else if(hand[i].get_rank() > maxrank){
 
           maxrank = hand[i].get_rank();
           index = i;
@@ -254,10 +269,18 @@ class Simple : public Player{
 
 
 
+ //only trump 
   int count = 0;
   for(int i= 0; i < hand.size(); ++i){
 
     if(hand[i].is_trump(trump) == 1){
+      ++count;
+    }
+
+    //since left bower is considered trump
+    //suit, add it to the count of
+    //"if only trump cards"
+    if(hand[i].is_left_bower(trump)){
       ++count;
     }
   }
@@ -274,40 +297,40 @@ class Simple : public Player{
         index = i;
       }
 
-
-
-    //just in case wither of them is a bower here's what we gotta do
-
-      if(hand[i].is_left_bower(trump) == 1){
-        break;
-      }
-
-      if(hand[i].is_right_bower(trump) == 1){
-        break;
-      }
     }
   
+
+  
+  //just in case either of them is a bower here's what we gotta do
+
+  //left bower
   for(int i= 0; i < hand.size(); ++i){
 
     if(hand[i].is_left_bower(trump) == 1){
 
           index = i;
-          break;
         }
     }
 
+  //right bower
   for(int i= 0; i < hand.size(); ++i){
     
     if(hand[i].is_right_bower(trump) == 1){
 
           index = i;
-          break;
         }
     }
+  
+
+  //end of if only trump section
   }
   
+
+  //make a copy of card to play, delete real card, return copy
   Card returned = hand[index];
+
   hand.erase(hand.begin() + index);
+
   return returned;
 
 }
@@ -315,6 +338,14 @@ class Simple : public Player{
   //REQUIRES Player has at least one card
   //EFFECTS  Plays one Card from Player's hand according to their strategy.
   //  The card is removed from the player's hand.
+
+
+
+  //strat:
+  // If a Simple Player can follow suit, they play the 
+  // highest card that follows suit. Otherwise, they play 
+  // the lowest card in their hand.
+
   Card play_card(const Card &led_card, Suit trump){
     assert(hand.size() >= 1);
 
@@ -322,69 +353,146 @@ class Simple : public Player{
     int maxrank = 0;
     int minrank = 12;
 
+
+
     //follow suit code
     for(int i = 0; i < hand.size(); ++i){
 
-      if(hand[i].get_suit() == led_card.get_suit()){
+      if((hand[i].get_rank() > maxrank) && (hand[i].get_suit() == led_card.get_suit())){
 
-        if(hand[i].get_rank() > maxrank){
-
-          maxrank = hand[i].get_rank();
-          index = i;
-        }
+        index = i;
+        maxrank = hand[i].get_rank();
       }
     }
 
-    //bower check
-    for(int i = 0; i < hand.size(); ++i){
+    //if led suit is also trump
+    if(led_card.get_suit() == trump){
 
-      if((led_card.get_suit() == trump) && (hand[i].get_suit() == led_card.get_suit())){
-
-        if(hand[i].is_left_bower(trump) == 1){
-
-          index = i;
-        }
-      }
-    }
-
-    for(int i = 0; i < hand.size(); ++i){
-
-      if((led_card.get_suit() == trump) && (hand[i].get_suit() == led_card.get_suit())){
-
-        if(hand[i].is_right_bower(trump) == 1){
-
-          index = i;
-        }
-      }
-    }
-
-    //cannot follow suit code
-    int count = 0;
-
-    for(int i = 0; i < hand.size(); ++i){
-      if(led_card.get_suit() != hand[i].get_suit()){
-        ++count;
-      }
-    }
-
-    if(count == hand.size()){
-
+      //check for left bower
       for(int i = 0; i < hand.size(); ++i){
 
-        if(hand[i].get_rank() < minrank){
-
-          minrank = hand[i].get_rank();
+        if(hand[i].is_left_bower(trump) == 1){
           index = i;
+        }
+      }
 
+      //check for right bower
+      for(int i = 0; i < hand.size(); ++i){
+
+        if(hand[i].is_right_bower(trump) == 1){
+          index = i;
         }
       }
     }
+
+
+
+  //if player can't follow suit
+
+
+  int count1 = 0;
+  //if the led suit isn't the trump suit
+  if(led_card.get_suit() != trump){
+
+    for(int i = 0; i < hand.size(); ++i){
+
+      if(hand[i].get_suit() != led_card.get_suit()){
+
+        ++count1;
+      }
+    }
+
+
+  //if all of the cards in players hand
+  //are cards not same suit as led suit,
+  //AND aren't trump,
+  //then find the minimum rank
+  if(count1 == hand.size()){
+
+    for(int i = 0; i < hand.size(); ++i){
+
+      if((hand[i].get_suit() != trump) && (hand[i].get_rank() < minrank)){
+
+        minrank = hand[i].get_rank();
+        index = i;
+      }
+    }
+  }
+
+
+  int count2 = 0;
+  for(int i = 0; i < hand.size(); ++i){
+
+    if(hand[i].get_suit() == trump){
+
+      ++count2;
+    }
+
+    //checl for lef bower and add to count if its there
+    if(hand[i].is_left_bower(trump) == 1){
+
+      ++count2;
+    }
+  }
+
+  //if all cards in hand ARE trump,
+  //and led suit isn't trump
+  if(count2 == hand.size()){
+
+    for(int i = 0; i < hand.size(); ++i){
+
+      if(hand[i].get_rank() < minrank){
+
+        index = i;
+        minrank = hand[i].get_rank();
+      }
+    }
+   }
+  }
+
+//if led suit IS trump (makes things a lot easier)
+if(led_card.get_suit() == trump){
+
+
+  int count3 = 0;
+  for(int i = 0; i < hand.size(); ++i){
+
+    if(hand[i].get_suit() != trump){
+
+      ++count3;
+    }
+
+    if(hand[i].is_left_bower(trump) == 1){
+
+      count3--;
+    }
+  }
+
+  //if all of the cards in players hand
+  //aren't trump/led suit
+  if(count3 == hand.size()){
+
+    for(int i = 0; i < hand.size(); ++i){
+
+      if(hand[i].get_rank() < minrank){
+
+        index = i;
+        minrank = hand[i].get_rank();
+      }
+    }
+  }
+}
+
 
     //make a copy of card to play, delete real card, return copy
     Card copy = hand[index];
+
     hand.erase(hand.begin() + index);
+
     return copy;
   }
+
+
 
   private:
 
