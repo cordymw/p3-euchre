@@ -355,21 +355,18 @@ bool operator!=(const Card &lhs, const Card &rhs){
 
 Suit Suit_next(Suit suit){
   
-  if(suit == 1){
-    return DIAMONDS;
-  }
-
-  if(suit == 3){
+  if(suit == 0){
     return HEARTS;
   }
 
-  if(suit == 2){
-    return SPADES;
-  }
-
-  if(suit == 0){
+  if(suit == 1){
     return CLUBS;
   }
+
+  if(suit == 2){
+    return DIAMONDS;
+  }
+  
   return SPADES;
 }
 
@@ -400,9 +397,9 @@ bool Card_less(const Card &a, const Card &b, Suit trump){
 //EFFECTS Returns true if a is lower value than b.  Uses both the trump suit
 //  and the suit led to determine order, as described in the spec.
 bool Card_less(const Card &a, const Card &b, const Card &led_card, Suit trump){
-  //if card b is the led suit and a isnt trump, true:: made
-  //if card b is led suit and a is trump, false:: made
-  //if card b is trump and card a is trump, if rank b > a, true:: made
+  //if card b is the led suit and a isnt trump, true
+  //if card b is led suit and a is trump, false
+  //if card b is trump and card a is trump, if rank b > a, true
   //if neither led suit and neither trump, false since they're both automiatic losers:: implemented in the final return 0
 
   //i didn't wanna have 4 conditions in 1 if statement because it looked dumb and bad so 
@@ -416,26 +413,36 @@ bool Card_less(const Card &a, const Card &b, const Card &led_card, Suit trump){
   Rank ar = a.get_rank();
   Suit as = a.get_suit();
 
-  if (as == trump)
-  {
-    if (bs == trump)
-    {
-      return ar < br;
-    }
-    return 1;
-  }
 
-  if (as == ledSuit)
-  {
-    if (bs == ledSuit)
-    {
-      return ar < br;
-    }
-    return 1;
-  }
-
-  return ar < br;
+//diff ranks
+if(bs == trump && as != trump){
+  return 1;
 }
+
+if(bs == ledSuit && as != ledSuit){
+  return 1;
+}
+
+
+//same ranks
+if(bs == trump && as == trump){
+  if(br > ar){
+    return 1;
+  }
+}
+
+if(bs == ledSuit && as == ledSuit){
+  if(br > ar){
+    return 1;
+  }
+}
+
+
+
+return 0;
+//end of card_less
+}
+
 
 
 
