@@ -24,7 +24,7 @@ class Game
         void play_trick();//identified
         void set_up_card();//identified
         void deal();//identified
-        Player * maker;
+        Player * maker;//identified
 
     private:
         Pack pack;
@@ -67,20 +67,28 @@ Game::Game(Pack c, bool s, int pts, const vector<Player*> p)
   t1_pts = 0;
   t2_pts = 0;
 
+  temp_t1 = 0;
+  temp_t2 = 0;
+
   if(dealer_index == leader_index){
     cout << "smth wrong bruh" << endl;
   }
-
-  
 }
 
 void Game::play_game()
 {
   int handNum = 0;
 
-  while (t1_pts < pt_target && t2_pts < pt_target)
+  while (t1_pts < pt_target || t2_pts < pt_target)
   {
     play_hand(handNum);
+
+
+  if(t1_pts >= pt_target || t2_pts >= pt_target){
+    break;
+  }
+
+
     ++handNum;
 
     ++dealer_index;
@@ -93,10 +101,13 @@ void Game::play_game()
   }
   
 
-  if (t1_pts == pt_target){
+  if (t1_pts >= pt_target){
+    cout << endl;
     cout << *players[0] << " and " << *players[2] << " win!" << endl;
   }
-  else{
+
+  if(t2_pts >= pt_target){
+    cout << endl;
     cout << *players[1] << " and " << *players[3] << " win!" << endl;
   }
 }
@@ -110,8 +121,8 @@ void Game::play_hand(int handNum)
 
 
   const int NUM_TRICKS = 5;
-  int temp_t1 = 0;
-  int temp_t2 = 0;
+  temp_t1 = 0;
+  temp_t2 = 0;
 
   if (shuffle == 1)
   {
@@ -131,34 +142,6 @@ void Game::play_hand(int handNum)
   }
 
 
-  //march/euchred possibilities
-  if(maker == players[0] || players[2]){
-
-    if(temp_t1 == 0){
-      cout << "euchred!" << endl;
-      ++t2_pts;
-    }
-
-    if(temp_t1 == 5){
-      cout << "march!" << endl;
-      ++t1_pts;
-    }
-
-  }
-  else{
-
-    if(temp_t2 == 0){
-      cout << "euchred!" << endl;
-      ++t1_pts;
-    }
-
-    if(temp_t2 == 5){
-      cout << "march!" << endl;
-      ++t2_pts;
-    }
-
-  }
-
 
   //who won hand/ assigning points
   if(temp_t1 > temp_t2){
@@ -170,6 +153,43 @@ void Game::play_hand(int handNum)
     ++t2_pts;
   }
 
+
+
+//march/euchred possibilities
+
+//team 1 made trump
+
+  if((maker == players[0]) || (maker == players[2])){
+
+    if((temp_t1 == 0) || (temp_t1 == 1) || (temp_t1 == 2)){
+      cout << "euchred!" << endl;
+      ++t2_pts;
+    }
+
+    if(temp_t1 == 5){
+      cout << "march!" << endl;
+      ++t1_pts;
+    }
+
+  }
+
+  //team 2 made trump
+  else{
+
+    if((temp_t2 == 0) || (temp_t2 == 1) || (temp_t2 == 2)){
+      cout << "euchred!" << endl;
+      ++t1_pts;
+    }
+
+    if(temp_t2 == 5){
+      cout << "march!" << endl;
+      ++t2_pts;
+    }
+
+  }
+  
+
+
   //points count
    cout << *players[0] << " and " << *players[2] << " have " << t1_pts << " points" << endl;
    cout << *players[1] << " and " << *players[3] << " have " << t2_pts << " points" << endl;
@@ -179,16 +199,22 @@ void Game::play_hand(int handNum)
   if(leader_index == 4){
     leader_index = 0;
   }
+
+
+
+//end of play hand
 }
 
 void Game::deal()
 {
-//
   int deal_index = dealer_index + 1;
+
+
   if(deal_index == 4){
     deal_index = 0;
   }
 
+  //first round of dealing (3-2-3-2)
   players[deal_index]->add_card(pack.deal_one());
   players[deal_index]->add_card(pack.deal_one());
   players[deal_index]->add_card(pack.deal_one());
@@ -218,11 +244,16 @@ void Game::deal()
   players[deal_index]->add_card(pack.deal_one());
   players[deal_index]->add_card(pack.deal_one());
 
-  ++deal_index;
-  if(deal_index == 4){
-    deal_index = 0;
-  }
   
+
+
+  deal_index = dealer_index + 1;
+
+  if(deal_index == 4){
+    deal_index = 0;
+  }
+
+  //second round of dealing (2-3-2-3)
   players[deal_index]->add_card(pack.deal_one());
   players[deal_index]->add_card(pack.deal_one());
 
@@ -252,6 +283,7 @@ void Game::deal()
   players[deal_index]->add_card(pack.deal_one());
   players[deal_index]->add_card(pack.deal_one());
 
+//end of deal
 }
 
 void Game::set_up_card()
@@ -307,14 +339,22 @@ Suit Game::play_round_1()
 
   dealer->add_and_discard(upcard);
 
+  maker = players[player_index];
+
   return trump_suit;
 
+
+//end of play round
 }
 
 
 
 void Game::play_trick()
 {
+
+  //CARD PLAYING
+
+
   leader = players[leader_index];
 
   Card led = leader->lead_card(trump_suit);
@@ -345,8 +385,14 @@ void Game::play_trick()
   cout << four << " played by " << *players[index] << endl;
 
   
+
+
+
+  //WHO WON TRICK
+
+
   //if leader was player[0]
-  if(players[leader_index] == players[0]){
+if(players[leader_index] == players[0]){
   //they are on team one
 
   if((Card_less(two, led, led, trump_suit) == 1) && (Card_less(four, led, led, trump_suit) == 1)){
@@ -365,6 +411,7 @@ void Game::play_trick()
     cout << endl;
     leader_index = 2;
   }
+
   //if winner is on team two
   else if((Card_less(led, two, led, trump_suit) == 1) && (Card_less(three, two, led, trump_suit) == 1)){
   //player 1 wins the trick
@@ -388,9 +435,8 @@ void Game::play_trick()
   }
 
 
-
   //if leader is player[1]
-if(players[leader_index] == players[1]){
+else if(players[leader_index] == players[1]){
 //bro is on team 2
 
   if((Card_less(two, led, led, trump_suit) == 1) && (Card_less(four, led, led, trump_suit) == 1)){
@@ -415,6 +461,7 @@ if(players[leader_index] == players[1]){
 
     cout << *players[2] << " takes the trick (7)" << endl;
     cout << endl;
+    leader_index = 2;
   }
   else{
 
@@ -422,11 +469,13 @@ if(players[leader_index] == players[1]){
 
     cout << *players[0] << " takes the trick (8)" << endl;
     cout << endl;
+    leader_index = 0;
   }
+}
 
 
-  //if leader is player[2]
-  if(players[leader_index] == players[2]){
+else if(players[leader_index] == players[2]){
+    //player[2] was leader
 
     if((Card_less(two, led, led, trump_suit) == 1) && (Card_less(four, led, led, trump_suit) == 1)){
 
@@ -442,7 +491,7 @@ if(players[leader_index] == players[1]){
 
     cout << *players[0] << " takes the trick (10)" << endl;
     cout << endl;
-    leader_index = 3;
+    leader_index = 0;
   }
   else if((Card_less(led, two, led, trump_suit) == 1) && (Card_less(three, two, led, trump_suit) == 1)){
 
@@ -450,6 +499,7 @@ if(players[leader_index] == players[1]){
 
     cout << *players[3] << " takes the trick (11)" << endl;
     cout << endl;
+    leader_index = 3;
   }
   else{
 
@@ -457,12 +507,14 @@ if(players[leader_index] == players[1]){
 
     cout << *players[1] << " takes the trick (12)" << endl;
     cout << endl;
+    leader_index = 1;
   }
   }
 
 
   //if leader = player[3]
-  if(players[leader_index] == players[3]){
+//if(players[leader_index] == players[3])
+else{
 
     if((Card_less(two, led, led, trump_suit) == 1) && (Card_less(four, led, led, trump_suit) == 1)){
 
@@ -478,7 +530,7 @@ if(players[leader_index] == players[1]){
 
     cout << *players[1] << " takes the trick (14)" << endl;
     cout << endl;
-    leader_index = 3;
+    leader_index = 1;
   }
   else if((Card_less(led, two, led, trump_suit) == 1) && (Card_less(three, two, led, trump_suit) == 1)){
 
@@ -486,6 +538,7 @@ if(players[leader_index] == players[1]){
 
     cout << *players[0] << " takes the trick (15)" << endl;
     cout << endl;
+    leader_index = 0;
   }
   else{
 
@@ -493,11 +546,11 @@ if(players[leader_index] == players[1]){
 
     cout << *players[2] << " takes the trick (16)" << endl;
     cout << endl;
+    leader_index = 2;
   }
   }
 
 
-}
 
 
 //end of play trick
@@ -505,7 +558,8 @@ if(players[leader_index] == players[1]){
 
 
 
-
+//end of game adt
+//start of driver
 
 
 //driver
@@ -573,7 +627,10 @@ string type4 = argv[11];
     shuffled = 1;
   }
 
-  Game game(game_pack, shuffled, atoi(argv[3]), players);
+  int pts = atoi(argv[3]);
+  cout << "points to win = " << pts << endl;
+
+  Game game(game_pack, shuffled, pts, players);
   game.play_game();
 
   return 0;
