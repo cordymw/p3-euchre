@@ -129,6 +129,7 @@ void Game::play_hand(int handNum)
     pack.shuffle();
   }
 
+  pack.reset();
   deal();
 
   set_up_card();
@@ -193,7 +194,7 @@ void Game::play_hand(int handNum)
   //points count
    cout << *players[0] << " and " << *players[2] << " have " << t1_pts << " points" << endl;
    cout << *players[1] << " and " << *players[3] << " have " << t2_pts << " points" << endl;
-
+   cout << endl;
 
 
   if(leader_index == 4){
@@ -295,6 +296,7 @@ void Game::set_up_card()
 
 Suit Game::play_round_1()
 {
+
   bool making_trump = 0;
 
   Suit order_up = upcard.get_suit();
@@ -322,22 +324,28 @@ Suit Game::play_round_1()
       if(making_trump == 1){
 
         trump_suit = order_up;
+        //player_index = leader_index;
         break;
 
       }
     }
-    ++round;
     if(making_trump == 1){
       break;
     }
+    ++round;
   }
 
-  leader_index = player_index;
+  leader_index = dealer_index + 1;
+  if(leader_index == 4){
+    leader_index = 0;
+  }
 
   cout << players[player_index]->get_name() << " orders up " << trump_suit << endl;
   cout << endl;
 
+  if(round == 1){
   dealer->add_and_discard(upcard);
+  }
 
   maker = players[player_index];
 
@@ -483,6 +491,8 @@ else if(players[leader_index] == players[2]){
 
     cout << *players[leader_index] << " takes the trick (9)" << endl;
     cout << endl;
+
+//Ivan Human Judea Human Kunle Human Liskov Human
 
   }
   else if((Card_less(two, three, led, trump_suit) == 1) && (Card_less(four, three, led, trump_suit) == 1)){
