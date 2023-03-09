@@ -405,7 +405,7 @@ bool Card_less(const Card &a, const Card &b, const Card &led_card, Suit trump){
   //i didn't wanna have 4 conditions in 1 if statement because it looked dumb and bad so 
   //my thought process is to return 0 at the end that way if all of the rest of the conditions
   //are unmet for any of the if statements then it just isn't true becaus they're both losers
-  Suit ledSuit = led_card.get_suit();
+  Suit led_suit = led_card.get_suit();
 
   Rank br = b.get_rank();
   Suit bs = b.get_suit();
@@ -414,28 +414,169 @@ bool Card_less(const Card &a, const Card &b, const Card &led_card, Suit trump){
   Suit as = a.get_suit();
 
 
-//diff ranks
-if(bs == trump && as != trump){
+
+if(led_suit != trump){
+//1st: see if either can match led card
+if((bs == led_suit) && (as != led_suit) && (as != trump)){
   return 1;
 }
 
-if(bs == ledSuit && as != ledSuit){
+if(bs == led_suit && as == trump){
+  return 0;
+}
+
+if((as == led_suit) && (bs != led_suit) && (bs != trump)){
+  return 0;
+}
+
+if(as == led_suit && bs == trump){
   return 1;
 }
 
-
-//same ranks
-if(bs == trump && as == trump){
+if(as == led_suit && bs == led_suit){
   if(br > ar){
     return 1;
   }
 }
 
-if(bs == ledSuit && as == ledSuit){
+//2nd: if neither match led suit, see if either match trump suit (watch for bowers)
+if(as != led_suit && bs != led_suit){
+
+  if(bs == trump && as != trump){
+    if(a.is_left_bower(trump) == 1 && b.is_right_bower(trump) == 0){
+      return 0;
+    }
+    else if(a.is_left_bower(trump) == 1 && b.is_right_bower(trump) == 1){
+      return 1;
+    }  
+
+    return 1;
+  }
+
+  if(as == trump && bs != trump){
+
+    if(b.is_left_bower(trump) == 1 && a.is_right_bower(trump) == 0){
+      return 1;
+    }
+    else if(b.is_left_bower(trump) == 1 && a.is_right_bower(trump) == 1){
+      return 0;
+    }
+
+    return 0;
+  }
+
+  if(as == trump && bs == trump){
+
+    if(a.is_right_bower(trump) == 1){
+      return 0;
+    }
+    if(b.is_right_bower(trump) == 1){
+      return 1;
+    }
+
+    if(br > ar){
+      return 1;
+    }
+  }
+
+
+  if(as != trump && bs != trump){
+
+    if(a.is_left_bower(trump) == 1){
+    return 0;
+    }
+    if(b.is_left_bower(trump) == 1){
+    return 1;
+    } 
+
+    if(br > ar){
+    return 1;
+    }
+
+  }
+}
+
+//3rd: if neither are trump and neither are led suit, go by rank or left bower
+if(as != trump && as != led_suit && bs != trump && bs != led_suit){
+
+  if(a.is_left_bower(trump) == 1){
+    return 0;
+  }
+  if(b.is_left_bower(trump) == 1){
+    return 1;
+  }
+
   if(br > ar){
     return 1;
   }
 }
+}
+
+
+//4th: if led suit = trump, then its just the trump code again
+//it'll only use trump code because if neither of them are bowers
+//it still goes by rank
+if(led_suit == trump){
+
+  if(bs == trump && as != trump){
+    if(a.is_left_bower(trump) == 1 && b.is_right_bower(trump) == 0){
+      return 0;
+    }
+    else if(a.is_left_bower(trump) == 1 && b.is_right_bower(trump) == 1){
+      return 1;
+    }  
+
+    return 1;
+  }
+
+  if(as == trump && bs != trump){
+
+    if(b.is_left_bower(trump) == 1 && a.is_right_bower(trump) == 0){
+      return 1;
+    }
+    else if(b.is_left_bower(trump) == 1 && a.is_right_bower(trump) == 1){
+      return 0;
+    }
+
+    return 0;
+  }
+
+  if(as == trump && bs == trump){
+
+    if(a.is_right_bower(trump) == 1){
+      return 0;
+    }
+    if(b.is_right_bower(trump) == 1){
+      return 1;
+    }
+
+    if(br > ar){
+      return 1;
+    }
+  }
+
+
+  if(as != trump && bs != trump){
+
+    if(a.is_left_bower(trump) == 1){
+    return 0;
+    }
+    if(b.is_left_bower(trump) == 1){
+    return 1;
+    } 
+
+    if(br > ar){
+    return 1;
+    }
+
+  }
+
+
+
+
+
+}
+
 
 
 
