@@ -286,6 +286,21 @@ TEST(test_lead_card_left_bower)
     delete Obama;
 }
 
+TEST(test_lead_card_both_bowers)
+{
+    Player* Obama = Player_factory("Obama", "Simple");
+
+    Obama->add_card(Card(NINE, HEARTS));
+    Obama->add_card(Card(TEN, HEARTS));
+    Obama->add_card(Card(JACK, DIAMONDS));
+    Obama->add_card(Card(JACK, HEARTS));
+    Obama->add_card(Card(KING, HEARTS));
+
+    ASSERT_EQUAL(Obama->lead_card(HEARTS), Card(JACK, HEARTS));
+
+    delete Obama;
+}
+
 TEST(test_lead_card_only_trump_suit)
 {
     Player* Obama = Player_factory("Obama", "Simple");
@@ -316,7 +331,38 @@ TEST(test_lead_card_only_off_suit)
     delete Obama;
 }
 
+TEST(test_add_discard_bower)
+{
+    Player* Obama = Player_factory("Obama", "Simple");
 
+    Obama->add_card(Card(TEN, CLUBS));
+    Obama->add_card(Card(TEN, CLUBS));
+    Obama->add_card(Card(TEN, CLUBS));
+    Obama->add_card(Card(TEN, CLUBS));
+    Obama->add_card(Card(NINE, CLUBS));
 
+    Obama->add_and_discard(Card(JACK, HEARTS));
+
+    ASSERT_EQUAL(Obama->lead_card(HEARTS), Card(JACK, HEARTS));
+
+    delete Obama;
+}
+
+TEST(test_add_discard_upcard_is_lowest)
+{
+    Player* Obama = Player_factory("Obama", "Simple");
+
+    Obama->add_card(Card(TEN, CLUBS));
+    Obama->add_card(Card(JACK, CLUBS));
+    Obama->add_card(Card(QUEEN, CLUBS));
+    Obama->add_card(Card(KING, CLUBS));
+    Obama->add_card(Card(ACE, CLUBS));
+
+    Obama->add_and_discard(Card(NINE, CLUBS));
+
+    ASSERT_NOT_EQUAL(Obama->play_card(Card(KING, HEARTS), CLUBS), Card(NINE, HEARTS));
+
+    delete Obama;
+}
 
 TEST_MAIN()
