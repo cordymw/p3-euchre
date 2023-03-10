@@ -48,20 +48,20 @@ class Simple : public Player{
 
     int count = 0;
 
+    Suit good = upcard.get_suit();
+    Suit next = Suit_next(good);
+
     if(round == 1){
       
 
       for(int i = 0; i < hand.size(); ++i){
-        if(hand[i].get_suit() == upcard.get_suit()){
-          if(hand[i].is_face_or_ace() == 1){
-            ++count;
-          }
-        }
-        if(hand[i].is_left_bower(upcard.get_suit()) == 1){
-          ++count;
-        }
-      }
+        if(((hand[i].get_suit() == upcard.get_suit()) && 
+        (hand[i].is_face_or_ace())) || 
+        (hand[i].is_left_bower(upcard.get_suit()))){
 
+            ++count;
+      }
+    }
 
       if(count >= 2){
         order_up_suit = upcard.get_suit();
@@ -72,108 +72,36 @@ class Simple : public Player{
     }
 
 
-
+    //good is trump suit
+    //next is same color
 
     if(round == 2){
-      
 
-    if(upcard.get_suit() == 0){
-      
-        Suit good = CLUBS;
 
     for(int i = 0; i < hand.size(); ++i){
       
 
-      if(hand[i].get_suit() == 2){
-        if(hand[i].is_face_or_ace() == 1){
-          ++count;
-        }
-      }
-        if(hand[i].is_left_bower(CLUBS)){
-          ++count;
-        }
-      }
-       if(count >=1){
-        order_up_suit = good;
-        return 1;
-        }}
-
-
-
-      if(upcard.get_suit() == 1){
+      if((hand[i].get_suit() == next) && hand[i].is_face_or_ace()){
         
-        Suit good = DIAMONDS;
-
-        for(int i = 0; i < hand.size(); ++i){
-
-
-        if(hand[i].get_suit() == 3){
-        if(hand[i].is_face_or_ace() == 1){
+          ++count;
+      }
+      if(hand[i].is_left_bower(good)){
           ++count;
         }
       }
-        if(hand[i].is_left_bower(DIAMONDS)){
-          ++count;
-        }
+
+    if(count >=1){
+
+      order_up_suit = next;
+      return 1;
       }
-       if(count >=1){
-        order_up_suit = good;
-        return 1;
-        }}
 
-
-
-      if(upcard.get_suit() == 2){
-
-        Suit good = SPADES;
-
-        for(int i = 0; i < hand.size(); ++i){
-          
-
-        if(hand[i].get_suit() == 0){
-        if(hand[i].is_face_or_ace() == 1){
-          ++count;
-        }
-      }
-        if(hand[i].is_left_bower(SPADES)){
-          ++count;
-        }
-      }
-      if(count >=1){
-        order_up_suit = good;
-        return 1;
-        }}
-
-
-
-      if(upcard.get_suit() == 3){
-        
-        Suit good = HEARTS;
-        
-        for(int i = 0; i < hand.size(); ++i){
-
-
-        if(hand[i].get_suit() == 1){
-        if(hand[i].is_face_or_ace() == 1){
-          ++count;
-        }
-      }
-        if(hand[i].is_left_bower(HEARTS)){
-          ++count;
-
-        }
-      }
-      if(count >=1){
-        order_up_suit = good;
-        return 1;
-      }}
-
-     
 
       if(is_dealer == 1){
-      order_up_suit = upcard.get_suit();
+
+      order_up_suit = good;
       return 1;
-    }
+      }
     }
 
   return 0;
@@ -236,6 +164,12 @@ Card low = hand[index];
 
         else if(hand[i].get_rank() > maxrank){
 
+          maxrank = hand[i].get_rank();
+          index = i;
+        }
+
+        else if((hand[i].get_rank() == maxrank) && 
+        (hand[i].get_suit() > hand[index].get_suit())){
           maxrank = hand[i].get_rank();
           index = i;
         }
@@ -335,7 +269,9 @@ Card low = hand[index];
     //follow suit code
     for(int i = 0; i < hand.size(); ++i){
 
-      if((hand[i].get_rank() >= maxrank) && (hand[i].get_suit() == led_card.get_suit()) && (hand[i].is_left_bower(trump) == 0)){
+      if((hand[i].get_rank() >= maxrank) && 
+      (hand[i].get_suit() == led_card.get_suit()) && 
+      (hand[i].is_left_bower(trump) == 0)){
 
         index = i;
         maxrank = hand[i].get_rank();
@@ -386,6 +322,9 @@ Card low = hand[index];
   //if the led suit isn't the trump suit
   if((led_card.get_suit() != trump) && !followed){
 
+
+
+
     for(int i = 0; i < hand.size(); ++i){
 
       if((hand[i].get_suit() != led_card.get_suit()) || hand[i].is_left_bower(trump)){
@@ -400,16 +339,22 @@ Card low = hand[index];
   //are cards not same suit as led suit,
   //AND aren't trump,
   //then find the minimum rank
-  if(count1 == hand.size()){
 
     for(int i = 0; i < hand.size(); ++i){
 
-      if((hand[i].get_suit() != trump) && (hand[i].get_rank() <= minrank) && (hand[i].is_left_bower(trump) == 0)){
+      if((count1 == hand.size()) && 
+      
+      (hand[i].get_suit() != trump) && 
+
+      (hand[i].get_rank() <= minrank) && 
+
+      (hand[i].is_left_bower(trump) == 0)){
+
 
         minrank = hand[i].get_rank();
         index = i;
       }
-    }
+    
   }
 
 
@@ -424,22 +369,40 @@ Card low = hand[index];
 
   //if all cards in hand ARE trump,
   //and led suit isn't trump
-  if(count2 == hand.size()){
+
+
 
     for(int i = 0; i < hand.size(); ++i){
 
-      if(hand[i].get_rank() <= minrank && hand[i].get_rank() != 9){
+      if(
+        (count2 == hand.size()) &&
+
+        (hand[i].get_rank() <= minrank) && 
+      
+        (hand[i].get_rank() != 9)){
 
         index = i;
         minrank = hand[i].get_rank();
       }
     }
-   }
   }
 
-//if led suit IS trump (makes things a lot easier)
-if(led_card.get_suit() == trump){
 
+maxrank = 0;
+minrank = 12;
+//if led suit IS trump (makes things a lot easier)
+if((led_card.get_suit() == trump) || led_card.is_left_bower(trump)){
+
+
+
+  for(int i = 0; i < hand.size(); ++i){
+
+    if((hand[i].get_rank() > maxrank) && (hand[i].get_suit() == trump)){
+      index = i;
+      maxrank = hand[i].get_rank();
+    }
+
+  }
 
   int count3 = 0;
   for(int i = 0; i < hand.size(); ++i){
@@ -455,19 +418,46 @@ if(led_card.get_suit() == trump){
     }
   }
 
+  //bower check
+  for(int i = 0; i < hand.size(); ++i){
+    if(hand[i].is_left_bower(trump)){
+      index = i;
+      maxrank = 13;
+    }
+
+  }
+
+  for(int i = 0; i < hand.size(); ++i){
+    if(hand[i].is_right_bower(trump)){
+      index = i;
+      maxrank = 14;
+    }
+
+  }
   //if all of the cards in players hand
   //aren't trump/led suit
-  if(count3 == hand.size()){
+  minrank = 12;
 
     for(int i = 0; i < hand.size(); ++i){
 
-      if(hand[i].get_rank() <= minrank){
+      if((count3 == hand.size()) &&
+
+        (hand[i].get_rank() < minrank)){
+
+        index = i;
+        minrank = hand[i].get_rank();
+      }
+
+      if((count3 == hand.size()) &&
+
+        (hand[i].get_rank() == minrank) && 
+
+        (hand[i].get_suit() < hand[index].get_suit())){
 
         index = i;
         minrank = hand[i].get_rank();
       }
     }
-  }
 }
 
 
@@ -655,3 +645,6 @@ os << p.get_name();
 return os;
 
 }
+
+
+//3456789022345678903234567890423456789052345678906234567890723456789082345678909234567890
