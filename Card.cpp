@@ -474,215 +474,45 @@ bool Card_less(const Card &a, const Card &b, const Card &led_card, Suit trump){
 
   Rank br = b.get_rank();
   Suit bs = b.get_suit();
+  if (b.is_left_bower(trump)){
+    bs = trump;
+  }
 
   Rank ar = a.get_rank();
   Suit as = a.get_suit();
+  if (a.is_left_bower(trump)){
+    as = trump;
+  }
 
-
-
-if(led_suit != trump && !led_card.is_left_bower(trump)){
-//1st: see if either can match led card
-  if((bs == led_suit) && (as != led_suit) && (as != trump)){
-   if(a.is_left_bower(trump)){
-    return 0;
-   }
+  // I declared that if a or b is the left bower their suit
+  // equals trump for simplicity sake in implementing
   
-  return 1;
+  // case 1: both are trump suit
+  if (as == trump && bs == trump){
+    if (ar == JACK && br == JACK){ 
+      // if both are jacks, returns t if b is right bower and a is not
+      return b.is_right_bower(trump) && !a.is_right_bower(trump);
+    }
+    if ((ar == JACK || br == JACK)){ 
+      // if one is a jack, returns t if b is jack
+      return br == JACK;
+    }
+  }
+
+  // case 2: one is trump
+  if (as == trump || bs == trump){
+    // return t if b is trump
+    return bs == trump;
+  }
+
+  // case 3: neither are trump and one is led
+  if (as == led_suit || bs == led_suit){
+    // return t if b is led
+    return bs == led_suit;
+  }
+
+  // case 4: in all other instances it should 
+  // just come down to their rank
+  return ar < br;
 }
-
-if(bs == led_suit && as == trump){
-  if(b.is_left_bower(trump)){
-    return 1;
-  }
-
-  return 0;
-}
-
-if((as == led_suit) && (bs != led_suit) && (bs != trump)){
-  return 0;
-}
-
-if(as == led_suit && bs == trump){
-  return 1;
-}
-
-if(as == led_suit && bs == led_suit){
-  if(br > ar){
-    return 1;
-  }
-}
-
-//2nd: if neither match led suit, see if either match trump suit (watch for bowers)
-if(as != led_suit && bs != led_suit){
-
-  if(bs == trump && as != trump && 
-  a.is_left_bower(trump) && !b.is_right_bower(trump)){
-   
-      return 0;
-    }
-
-  else if(bs == trump && as != trump && 
-  a.is_left_bower(trump) && b.is_right_bower(trump)){
-
-    return 1;
-  }
-
-
-  else if(bs == trump && as != trump){
-
-  return 1;
-  
-  }
-
-
-  if(as == trump && bs != trump && b.is_left_bower(trump) && !a.is_right_bower(trump)){
-
-    return 1;
-    }
-
-  else if(as == trump && bs != trump && b.is_left_bower(trump) && 
-  a.is_right_bower(trump)){
-    return 0;
-  }
-
-  else if(as == trump && bs != trump){
-    return 0;
-  }
-
-
-  if(as == trump && bs == trump && a.is_right_bower(trump)){
-
-    return 0;
-  }
-
-  if(as == trump && bs == trump && b.is_right_bower(trump)){
-
-  return 1;
-  }
-
-  if(as == trump && bs == trump && (br > ar)){
-
-    return 1;
-  }
-
-
-  if(as != trump && bs != trump && a.is_left_bower(trump)){
-
-    return 0;
-
-  }
-
-  if(as != trump && bs != trump && b.is_left_bower(trump)){
-
-    return 1;
-
-  }
-
-  if(as != trump && bs != trump && (br > ar)){
-
-    return 1;
-
-  }
-
-  if(as != trump && bs != trump && (br == ar) && (bs > as)){
-
-    return 1;
-
-  }
-}
-
-//3rd: if neither are trump and neither are led suit, go by rank or left bower
-if(as != trump && as != led_suit && bs != trump && bs != led_suit){
-
-  if(a.is_left_bower(trump) == 1){
-    return 0;
-  }
-  if(b.is_left_bower(trump) == 1){
-    return 1;
-  }
-
-  if(br > ar){
-    return 1;
-  }
-
-  if((br == ar) && (bs > as)){
-    return 1;
-  }
-}
-}
-
-
-//4th: if led suit = trump, then its just the trump code again
-//it'll only use trump code because if neither of them are bowers
-//it still goes by rank
-if(led_suit == trump || led_card.is_left_bower(trump)){
-
-  if(bs == trump && as != trump){
-    if(a.is_left_bower(trump) == 1 && b.is_right_bower(trump) == 0){
-      return 0;
-    }
-    else if(a.is_left_bower(trump) == 1 && b.is_right_bower(trump) == 1){
-      return 1;
-    }  
-
-    return 1;
-  }
-
-  if(as == trump && bs != trump){
-
-    if(b.is_left_bower(trump) == 1 && a.is_right_bower(trump) == 0){
-      return 1;
-    }
-    else if(b.is_left_bower(trump) == 1 && a.is_right_bower(trump) == 1){
-      return 0;
-    }
-
-    return 0;
-  }
-
-  if(as == trump && bs == trump){
-
-    if(a.is_right_bower(trump) == 1){
-      return 0;
-    }
-    if(b.is_right_bower(trump) == 1){
-      return 1;
-    }
-
-    if(br > ar){
-      return 1;
-    }
-  }
-
-
-  if(as != trump && bs != trump){
-
-    if(a.is_left_bower(trump) == 1){
-    return 0;
-    }
-    if(b.is_left_bower(trump) == 1){
-    return 1;
-    } 
-
-    if(br > ar){
-    return 1;
-    }
-
-    if((br == ar) && (bs > as)){
-      return 1;
-    }
-
-  }
-
-}
-
-
-
-
-return 0;
-//end of card_less
-}
-
-
-
 //3456789022345678903234567890423456789052345678906234567890723456789082345678909234567890
