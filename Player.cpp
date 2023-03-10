@@ -185,45 +185,22 @@ class Simple : public Player{
     assert(hand.size() >= 1);
 
     int index = 0;
-    int minrank = 12;
-    //if make trump = true but idk how to do that
      hand.push_back(upcard);
 
-    for(int i= 0; i < hand.size(); ++i){
-
-      if(hand[i].get_suit() != upcard.get_suit()){
-
-        if(hand[i].get_rank() < minrank){
-
-          minrank = hand[i].get_rank();
-          index = i;
-        }
-      }
-
-    }
-
-  int trump = 0;
-  for(int i= 0; i < hand.size(); ++i){
-
-    if(hand[i].get_suit() == upcard.get_suit()){
-      ++trump;
-    }
-  }
-
-  if(trump == hand.size()){
-    index = 0;
-    minrank = 12;
+//call card less to find min card
+Card low = hand[index];
 
     for(int i= 0; i < hand.size(); ++i){
 
-      if(hand[i].get_rank() < minrank){
-        minrank = hand[i].get_rank();
+      if(Card_less(hand[i], low, upcard.get_suit()) == 1){
+
+        low = hand[i];
         index = i;
+
       }
     }
-  }
   
-    hand.erase(hand.begin()+index);
+    hand.erase(hand.begin() + index);
 
     }
 
@@ -352,27 +329,41 @@ class Simple : public Player{
     int index = 0;
     int maxrank = 0;
     int minrank = 12;
-
+    bool followed = 0;
 
 
     //follow suit code
     for(int i = 0; i < hand.size(); ++i){
 
-      if((hand[i].get_rank() > maxrank) && (hand[i].get_suit() == led_card.get_suit())){
+      if((hand[i].get_rank() >= maxrank) && (hand[i].get_suit() == led_card.get_suit()) && (hand[i].is_left_bower(trump) == 0)){
 
         index = i;
         maxrank = hand[i].get_rank();
+        followed = 1;
       }
     }
 
     //if led suit is also trump
-    if(led_card.get_suit() == trump){
+    if((led_card.get_suit() == trump) || led_card.is_left_bower(trump)){
+
+      //general cards
+      for(int i = 0; i < hand.size(); ++i){
+
+        if((hand[i].get_suit() == trump) && (hand[i].get_rank() > maxrank)){
+
+          index = i;
+          maxrank = hand[i].get_rank();
+          followed = 1;
+        }
+
+      }
 
       //check for left bower
       for(int i = 0; i < hand.size(); ++i){
 
         if(hand[i].is_left_bower(trump) == 1){
           index = i;
+          followed = 1;
         }
       }
 
@@ -381,6 +372,7 @@ class Simple : public Player{
 
         if(hand[i].is_right_bower(trump) == 1){
           index = i;
+          followed = 1;
         }
       }
     }
@@ -392,14 +384,15 @@ class Simple : public Player{
 
   int count1 = 0;
   //if the led suit isn't the trump suit
-  if(led_card.get_suit() != trump){
+  if((led_card.get_suit() != trump) && !followed){
 
     for(int i = 0; i < hand.size(); ++i){
 
-      if(hand[i].get_suit() != led_card.get_suit()){
+      if((hand[i].get_suit() != led_card.get_suit()) || hand[i].is_left_bower(trump)){
 
         ++count1;
       }
+
     }
 
 
@@ -411,7 +404,7 @@ class Simple : public Player{
 
     for(int i = 0; i < hand.size(); ++i){
 
-      if((hand[i].get_suit() != trump) && (hand[i].get_rank() < minrank)){
+      if((hand[i].get_suit() != trump) && (hand[i].get_rank() <= minrank) && (hand[i].is_left_bower(trump) == 0)){
 
         minrank = hand[i].get_rank();
         index = i;
@@ -423,13 +416,7 @@ class Simple : public Player{
   int count2 = 0;
   for(int i = 0; i < hand.size(); ++i){
 
-    if(hand[i].get_suit() == trump){
-
-      ++count2;
-    }
-
-    //checl for lef bower and add to count if its there
-    if(hand[i].is_left_bower(trump) == 1){
+    if((hand[i].get_suit() == trump) || (hand[i].is_left_bower(trump))){
 
       ++count2;
     }
@@ -441,7 +428,7 @@ class Simple : public Player{
 
     for(int i = 0; i < hand.size(); ++i){
 
-      if(hand[i].get_rank() < minrank){
+      if(hand[i].get_rank() <= minrank && hand[i].get_rank() != 9){
 
         index = i;
         minrank = hand[i].get_rank();
@@ -474,7 +461,7 @@ if(led_card.get_suit() == trump){
 
     for(int i = 0; i < hand.size(); ++i){
 
-      if(hand[i].get_rank() < minrank){
+      if(hand[i].get_rank() <= minrank){
 
         index = i;
         minrank = hand[i].get_rank();
@@ -567,10 +554,8 @@ return 0;
   void add_and_discard(const Card &upcard){
     assert(hand.size() >= 1);
 
-    add_card(upcard);
 
     print_hand();
-
 
 
     cout << "Discard upcard: [-1]\n";
@@ -579,21 +564,15 @@ return 0;
     int index;
     cin >> index;
 
-    int upin = 0;
-    if(index == -1){
+
+
+    if(index != -1){
       
-      for(int i = 0; i < hand.size(); ++i){
-
-        if(hand[i] == upcard){
-          upin = i;
-        }
-      }
-      hand.erase(hand.begin() + upin);
-
-    }
-    else{
       hand.erase(hand.begin() + index);
+
+      add_card(upcard);
     }
+
 
   }
   //REQUIRES Player has at least one card
