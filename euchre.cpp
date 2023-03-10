@@ -192,8 +192,10 @@ void Game::play_hand(int handNum)
 
 
   //points count
-   cout << *players[0] << " and " << *players[2] << " have " << t1_pts << " points" << endl;
-   cout << *players[1] << " and " << *players[3] << " have " << t2_pts << " points" << endl;
+   cout << *players[0] << " and " << *players[2] 
+   << " have " << t1_pts << " points" << endl;
+   cout << *players[1] << " and " << *players[3] 
+   << " have " << t2_pts << " points" << endl;
    cout << endl;
 
 
@@ -403,14 +405,16 @@ void Game::play_trick()
 if(players[leader_index] == players[0]){
   //they are on team one
 
-  if((Card_less(two, led, led, trump_suit) == 1) && (Card_less(four, led, led, trump_suit) == 1)){
+  if((Card_less(two, led, led, trump_suit) == 1) && 
+      (Card_less(four, led, led, trump_suit) == 1)){
     //player 0, leader, takes the trick
 
     ++temp_t1;
     cout << *players[leader_index] << " takes the trick (1)" << endl;
     cout << endl;
   }
-  else if((Card_less(two, three, led, trump_suit) == 1) && (Card_less(four, three, led, trump_suit) == 1)){
+  else if((Card_less(two, three, led, trump_suit) == 1) 
+      && (Card_less(four, three, led, trump_suit) == 1)){
     //player 0 teammate player 2 takes the trick
 
     ++temp_t1;
@@ -421,7 +425,8 @@ if(players[leader_index] == players[0]){
   }
 
   //if winner is on team two
-  else if((Card_less(led, two, led, trump_suit) == 1) && (Card_less(three, two, led, trump_suit) == 1)){
+  else if((Card_less(led, two, led, trump_suit) == 1) && 
+          (Card_less(three, two, led, trump_suit) == 1)){
   //player 1 wins the trick
 
     ++temp_t2;
@@ -447,7 +452,8 @@ if(players[leader_index] == players[0]){
 else if(players[leader_index] == players[1]){
 //bro is on team 2
 
-  if((Card_less(two, led, led, trump_suit) == 1) && (Card_less(four, led, led, trump_suit) == 1)){
+  if((Card_less(two, led, led, trump_suit) == 1) && 
+      (Card_less(four, led, led, trump_suit) == 1)){
 
     ++temp_t2;
 
@@ -455,7 +461,8 @@ else if(players[leader_index] == players[1]){
     cout << endl;
 
   }
-  else if((Card_less(two, three, led, trump_suit) == 1) && (Card_less(four, three, led, trump_suit) == 1)){
+  else if((Card_less(two, three, led, trump_suit) == 1) && 
+          (Card_less(four, three, led, trump_suit) == 1)){
 
     ++temp_t2;
 
@@ -463,7 +470,8 @@ else if(players[leader_index] == players[1]){
     cout << endl;
     leader_index = 3;
   }
-  else if((Card_less(led, two, led, trump_suit) == 1) && (Card_less(three, two, led, trump_suit) == 1)){
+  else if((Card_less(led, two, led, trump_suit) == 1) && 
+          (Card_less(three, two, led, trump_suit) == 1)){
 
     ++temp_t1;
 
@@ -485,7 +493,8 @@ else if(players[leader_index] == players[1]){
 else if(players[leader_index] == players[2]){
     //player[2] was leader
 
-    if((Card_less(two, led, led, trump_suit) == 1) && (Card_less(four, led, led, trump_suit) == 1)){
+    if((Card_less(two, led, led, trump_suit) == 1) && 
+        (Card_less(four, led, led, trump_suit) == 1)){
 
     ++temp_t1;
 
@@ -495,7 +504,8 @@ else if(players[leader_index] == players[2]){
 //Ivan Human Judea Human Kunle Human Liskov Human
 
   }
-  else if((Card_less(two, three, led, trump_suit) == 1) && (Card_less(four, three, led, trump_suit) == 1)){
+  else if((Card_less(two, three, led, trump_suit) == 1) && 
+          (Card_less(four, three, led, trump_suit) == 1)){
 
     ++temp_t1;
 
@@ -503,7 +513,8 @@ else if(players[leader_index] == players[2]){
     cout << endl;
     leader_index = 0;
   }
-  else if((Card_less(led, two, led, trump_suit) == 1) && (Card_less(three, two, led, trump_suit) == 1)){
+  else if((Card_less(led, two, led, trump_suit) == 1) && 
+          (Card_less(three, two, led, trump_suit) == 1)){
 
     ++temp_t2;
 
@@ -526,7 +537,8 @@ else if(players[leader_index] == players[2]){
 //if(players[leader_index] == players[3])
 else{
 
-    if((Card_less(two, led, led, trump_suit) == 1) && (Card_less(four, led, led, trump_suit) == 1)){
+    if((Card_less(two, led, led, trump_suit) == 1) && 
+      (Card_less(four, led, led, trump_suit) == 1)){
 
     ++temp_t2;
 
@@ -534,7 +546,8 @@ else{
     cout << endl;
 
   }
-  else if((Card_less(two, three, led, trump_suit) == 1) && (Card_less(four, three, led, trump_suit) == 1)){
+  else if((Card_less(two, three, led, trump_suit) == 1) && 
+            (Card_less(four, three, led, trump_suit) == 1)){
 
     ++temp_t2;
 
@@ -542,7 +555,8 @@ else{
     cout << endl;
     leader_index = 1;
   }
-  else if((Card_less(led, two, led, trump_suit) == 1) && (Card_less(three, two, led, trump_suit) == 1)){
+  else if((Card_less(led, two, led, trump_suit) == 1) && 
+          (Card_less(three, two, led, trump_suit) == 1)){
 
     ++temp_t1;
 

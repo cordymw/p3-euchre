@@ -256,5 +256,67 @@ TEST(test_play_card_left_bower) {
     delete lice;
 }
 
+TEST(test_lead_card_right_bower)
+{
+    Player* Obama = Player_factory("Obama", "Simple");
+
+    Obama->add_card(Card(NINE, HEARTS));
+    Obama->add_card(Card(TEN, HEARTS));
+    Obama->add_card(Card(JACK, HEARTS));
+    Obama->add_card(Card(QUEEN, HEARTS));
+    Obama->add_card(Card(KING, HEARTS));
+
+    ASSERT_EQUAL(Obama->lead_card(HEARTS), Card(JACK, HEARTS));
+
+    delete Obama;
+}
+
+TEST(test_lead_card_left_bower)
+{
+    Player* Obama = Player_factory("Obama", "Simple");
+
+    Obama->add_card(Card(NINE, HEARTS));
+    Obama->add_card(Card(TEN, HEARTS));
+    Obama->add_card(Card(JACK, DIAMONDS));
+    Obama->add_card(Card(QUEEN, HEARTS));
+    Obama->add_card(Card(KING, HEARTS));
+
+    ASSERT_EQUAL(Obama->lead_card(HEARTS), Card(JACK, DIAMONDS));
+
+    delete Obama;
+}
+
+TEST(test_lead_card_only_trump_suit)
+{
+    Player* Obama = Player_factory("Obama", "Simple");
+
+    Obama->add_card(Card(NINE, HEARTS));
+    Obama->add_card(Card(TEN, HEARTS));
+    Obama->add_card(Card(ACE, HEARTS));
+    Obama->add_card(Card(QUEEN, HEARTS));
+    Obama->add_card(Card(KING, HEARTS));
+
+    ASSERT_EQUAL(Obama->lead_card(HEARTS), Card(ACE, HEARTS));
+
+    delete Obama;
+}
+
+TEST(test_lead_card_only_off_suit)
+{
+    Player* Obama = Player_factory("Obama", "Simple");
+
+    Obama->add_card(Card(NINE, CLUBS));
+    Obama->add_card(Card(TEN, SPADES));
+    Obama->add_card(Card(ACE, CLUBS));
+    Obama->add_card(Card(QUEEN, SPADES));
+    Obama->add_card(Card(KING, CLUBS));
+
+    ASSERT_EQUAL(Obama->lead_card(HEARTS), Card(ACE, CLUBS));
+
+    delete Obama;
+}
+
+
+
 
 TEST_MAIN()
