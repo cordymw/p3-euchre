@@ -319,17 +319,17 @@ bool operator==(const Card &lhs, const Card &rhs){
   int cardLeftval= cardLeft.get_rank();
   int cardRightval= cardRight.get_rank();
 
-  if(cardLeftval == cardRightval){
+  Suit cardLeftSuit = cardLeft.get_suit();
+  Suit cardRightSuit = cardRight.get_suit();
+
+  if((cardLeftval == cardRightval) &&
+      cardLeftSuit == cardRightSuit){
+
     return 1;
   }
   else{
     return 0;
   }
-//let it be known that as of 2/9/23 i am NOT considering suit inside operator== and operator !=
-//since it wouldn't make sense to have two of the exact same card in a deck, but if need be
-//i would:
-// add variables     int cardLeftSuit = cardLeft.get_suit()      int cardRightsuit = cardRight.get_suit()
-// change the if statement to if(cardLeftval == cardRightval && cardLeftsuit == cardRightsuit)
 }
 
 bool operator!=(const Card &lhs, const Card &rhs){
@@ -339,18 +339,27 @@ bool operator!=(const Card &lhs, const Card &rhs){
 
   int cardLeftval= cardLeft.get_rank();
   int cardRightval= cardRight.get_rank();
+  
+  Suit cardLeftSuit = cardLeft.get_suit();
+  Suit cardRightSuit = cardRight.get_suit();
 
-  if(cardLeftval != cardRightval){
+  if((cardLeftval != cardRightval)
+    || cardLeftSuit != cardRightSuit){
+
     return 1;
   }
   else{
     return 0;
   }
-//let it be known that as of 2/9/23 i am NOT considering suit inside operator== and operator !=
-//since it wouldn't make sense to have two of the exact same card in a deck, but if need be
+//let it be known that as of 2/9/23 i am NOT considering suit inside operator== and opera
+//tor !=
+//since it wouldn't make sense to have two of the exact same card in a deck, but if need 
+//be
 //i would:
-// add variables     int cardLeftSuit = cardLeft.get_suit()      int cardRightsuit = cardRight.get_suit()
-// change the if statement to if(cardLeftval != cardRightval || cardLeftsuit != cardRightsuit)
+// add variables     int cardLeftSuit = cardLeft.get_suit()      int cardRightsuit = card
+//Right.get_suit()
+// change the if statement to if(cardLeftval != cardRightval || cardLeftsuit != cardRight
+//suit)
 }
 
 Suit Suit_next(Suit suit){
@@ -373,24 +382,77 @@ Suit Suit_next(Suit suit){
 //EFFECTS Returns true if a is lower value than b.  Uses trump to determine
 // order, as described in the spec.
 bool Card_less(const Card &a, const Card &b, Suit trump){
-  if(b.get_suit() == trump){
+  
+  Rank br = b.get_rank();
+  Suit bs = b.get_suit();
+
+  Rank ar = a.get_rank();
+  Suit as = a.get_suit();
+
+
+  if((bs == trump) && (as != trump) && (!a.is_left_bower(trump))){
     return 1;
   }
 
-  if(a.get_suit() == trump){
+  if((bs == trump) && (as != trump) && (a.is_left_bower(trump))){
+    if(b.is_right_bower(trump)){
+      return 1;
+    }
+
     return 0;
   }
 
-  if(a.get_suit() != trump && b.get_suit() != trump){
 
-    if(b.get_rank() > a.get_rank()){
-      return 1;
-    }
-    else{
+  if((bs != trump) && (as ==trump) && (!b.is_left_bower(trump))){
+    return 0;
+  }
+
+  if((bs != trump) && (as ==trump) && (b.is_left_bower(trump))){
+    if(a.is_right_bower(trump)){
       return 0;
     }
 
+    return 1;
   }
+
+
+  if((bs != trump) && (as != trump)){
+
+    if(a.is_left_bower(trump)){
+      return 0;
+    }
+
+    if(b.is_left_bower(trump)){
+      return 1;
+    }
+
+    if(br > ar){
+      return 1;
+    }
+
+    if((br == ar) && (bs > as)){
+      return 1;
+    }
+
+  }
+
+
+  if((as == trump) && (bs == trump)){
+    
+    if(a.is_right_bower(trump)){
+      return 0;
+    }
+
+    if(b.is_right_bower(trump)){
+      return 1;
+    }
+
+    if(br > ar){
+      return 1;
+    }
+  }
+
+
   return 0;
 }
 
@@ -400,11 +462,14 @@ bool Card_less(const Card &a, const Card &b, const Card &led_card, Suit trump){
   //if card b is the led suit and a isnt trump, true
   //if card b is led suit and a is trump, false
   //if card b is trump and card a is trump, if rank b > a, true
-  //if neither led suit and neither trump, false since they're both automiatic losers:: implemented in the final return 0
+  //if neither led suit and neither trump, false since they're both automiatic losers:: i
+  //mplemented in the final return 0
 
   //i didn't wanna have 4 conditions in 1 if statement because it looked dumb and bad so 
-  //my thought process is to return 0 at the end that way if all of the rest of the conditions
-  //are unmet for any of the if statements then it just isn't true becaus they're both losers
+  //my thought process is to return 0 at the end that way if all of the rest of the condi
+  //tions
+  //are unmet for any of the if statements then it just isn't true becaus they're both lo
+  //sers
   Suit led_suit = led_card.get_suit();
 
   Rank br = b.get_rank();
@@ -415,13 +480,21 @@ bool Card_less(const Card &a, const Card &b, const Card &led_card, Suit trump){
 
 
 
-if(led_suit != trump){
+if(led_suit != trump && !led_card.is_left_bower(trump)){
 //1st: see if either can match led card
-if((bs == led_suit) && (as != led_suit) && (as != trump)){
+  if((bs == led_suit) && (as != led_suit) && (as != trump)){
+   if(a.is_left_bower(trump)){
+    return 0;
+   }
+  
   return 1;
 }
 
 if(bs == led_suit && as == trump){
+  if(b.is_left_bower(trump)){
+    return 1;
+  }
+
   return 0;
 }
 
@@ -442,56 +515,78 @@ if(as == led_suit && bs == led_suit){
 //2nd: if neither match led suit, see if either match trump suit (watch for bowers)
 if(as != led_suit && bs != led_suit){
 
-  if(bs == trump && as != trump){
-    if(a.is_left_bower(trump) == 1 && b.is_right_bower(trump) == 0){
+  if(bs == trump && as != trump && 
+  a.is_left_bower(trump) && !b.is_right_bower(trump)){
+   
       return 0;
     }
-    else if(a.is_left_bower(trump) == 1 && b.is_right_bower(trump) == 1){
-      return 1;
-    }  
+
+  else if(bs == trump && as != trump && 
+  a.is_left_bower(trump) && b.is_right_bower(trump)){
 
     return 1;
   }
 
-  if(as == trump && bs != trump){
 
-    if(b.is_left_bower(trump) == 1 && a.is_right_bower(trump) == 0){
-      return 1;
+  else if(bs == trump && as != trump){
+
+  return 1;
+  
+  }
+
+
+  if(as == trump && bs != trump && b.is_left_bower(trump) && !a.is_right_bower(trump)){
+
+    return 1;
     }
-    else if(b.is_left_bower(trump) == 1 && a.is_right_bower(trump) == 1){
-      return 0;
-    }
+
+  else if(as == trump && bs != trump && b.is_left_bower(trump) && 
+  a.is_right_bower(trump)){
+    return 0;
+  }
+
+  else if(as == trump && bs != trump){
+    return 0;
+  }
+
+
+  if(as == trump && bs == trump && a.is_right_bower(trump)){
 
     return 0;
   }
 
-  if(as == trump && bs == trump){
+  if(as == trump && bs == trump && b.is_right_bower(trump)){
 
-    if(a.is_right_bower(trump) == 1){
-      return 0;
-    }
-    if(b.is_right_bower(trump) == 1){
-      return 1;
-    }
+  return 1;
+  }
 
-    if(br > ar){
-      return 1;
-    }
+  if(as == trump && bs == trump && (br > ar)){
+
+    return 1;
   }
 
 
-  if(as != trump && bs != trump){
+  if(as != trump && bs != trump && a.is_left_bower(trump)){
 
-    if(a.is_left_bower(trump) == 1){
     return 0;
-    }
-    if(b.is_left_bower(trump) == 1){
-    return 1;
-    } 
 
-    if(br > ar){
+  }
+
+  if(as != trump && bs != trump && b.is_left_bower(trump)){
+
     return 1;
-    }
+
+  }
+
+  if(as != trump && bs != trump && (br > ar)){
+
+    return 1;
+
+  }
+
+  if(as != trump && bs != trump && (br == ar) && (bs > as)){
+
+    return 1;
 
   }
 }
@@ -509,6 +604,10 @@ if(as != trump && as != led_suit && bs != trump && bs != led_suit){
   if(br > ar){
     return 1;
   }
+
+  if((br == ar) && (bs > as)){
+    return 1;
+  }
 }
 }
 
@@ -516,7 +615,7 @@ if(as != trump && as != led_suit && bs != trump && bs != led_suit){
 //4th: if led suit = trump, then its just the trump code again
 //it'll only use trump code because if neither of them are bowers
 //it still goes by rank
-if(led_suit == trump){
+if(led_suit == trump || led_card.is_left_bower(trump)){
 
   if(bs == trump && as != trump){
     if(a.is_left_bower(trump) == 1 && b.is_right_bower(trump) == 0){
@@ -569,11 +668,11 @@ if(led_suit == trump){
     return 1;
     }
 
+    if((br == ar) && (bs > as)){
+      return 1;
+    }
+
   }
-
-
-
-
 
 }
 
@@ -586,4 +685,4 @@ return 0;
 
 
 
-
+//3456789022345678903234567890423456789052345678906234567890723456789082345678909234567890
