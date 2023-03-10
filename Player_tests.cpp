@@ -72,9 +72,9 @@ TEST(test_make_trump_left_bower) {
     Player * ali = Player_factory("Alice", "Simple");
 
     Card one(TEN, SPADES);
-    Card two(QUEEN, DIAMONDS);
+    Card two(QUEEN, CLUBS);
     Card three(NINE, SPADES);
-    Card four(ACE, HEARTS);
+    Card four(ACE, CLUBS);
     Card five(JACK, HEARTS);
 
     ali->add_card(one);
@@ -93,7 +93,7 @@ TEST(test_make_trump_left_bower) {
 
     ASSERT_EQUAL(real, 1);
 
-    ASSERT_EQUAL(order_up, DIAMONDS);
+    ASSERT_EQUAL(order_up, HEARTS);
 
     delete ali;
 }
@@ -198,7 +198,7 @@ TEST(test_play_card_no_follow_suit) {
 
     Card test = lice->play_card(led, HEARTS);
 
-    ASSERT_EQUAL(test, one);
+    ASSERT_EQUAL(test, two);
 
 
     delete lice;
@@ -343,7 +343,7 @@ TEST(test_add_discard_bower)
 
     Obama->add_and_discard(Card(JACK, HEARTS));
 
-    ASSERT_EQUAL(Obama->lead_card(HEARTS), Card(JACK, HEARTS));
+    ASSERT_EQUAL(Obama->lead_card(SPADES), Card(JACK, HEARTS));
 
     delete Obama;
 }
@@ -360,7 +360,7 @@ TEST(test_add_discard_upcard_is_lowest)
 
     Obama->add_and_discard(Card(NINE, CLUBS));
 
-    ASSERT_NOT_EQUAL(Obama->play_card(Card(KING, HEARTS), CLUBS), Card(NINE, HEARTS));
+    ASSERT_EQUAL(Obama->play_card(Card(KING, HEARTS), CLUBS), Card(TEN, CLUBS));
 
     delete Obama;
 }
