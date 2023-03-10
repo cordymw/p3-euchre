@@ -325,12 +325,12 @@ bool operator==(const Card &lhs, const Card &rhs){
   else{
     return 0;
   }
-
+//let it be known that as of 2/9/23 i am NOT considering suit inside operator== and operator !=
+//since it wouldn't make sense to have two of the exact same card in a deck, but if need be
+//i would:
+// add variables     int cardLeftSuit = cardLeft.get_suit()      int cardRightsuit = cardRight.get_suit()
+// change the if statement to if(cardLeftval == cardRightval && cardLeftsuit == cardRightsuit)
 }
-
-
-
-
 
 bool operator!=(const Card &lhs, const Card &rhs){
   
@@ -346,28 +346,28 @@ bool operator!=(const Card &lhs, const Card &rhs){
   else{
     return 0;
   }
-
-
-
-
-
+//let it be known that as of 2/9/23 i am NOT considering suit inside operator== and operator !=
+//since it wouldn't make sense to have two of the exact same card in a deck, but if need be
+//i would:
+// add variables     int cardLeftSuit = cardLeft.get_suit()      int cardRightsuit = cardRight.get_suit()
+// change the if statement to if(cardLeftval != cardRightval || cardLeftsuit != cardRightsuit)
 }
 
 Suit Suit_next(Suit suit){
   
   if(suit == 0){
-    return HEARTS;
-  }
-
-  if(suit == 1){
     return CLUBS;
   }
 
-  if(suit == 2){
+  if(suit == 1){
     return DIAMONDS;
   }
+
+  if(suit == 2){
+    return SPADES;
+  }
   
-  return SPADES;
+  return HEARTS;
 }
 
 //EFFECTS Returns true if a is lower value than b.  Uses trump to determine
@@ -397,6 +397,14 @@ bool Card_less(const Card &a, const Card &b, Suit trump){
 //EFFECTS Returns true if a is lower value than b.  Uses both the trump suit
 //  and the suit led to determine order, as described in the spec.
 bool Card_less(const Card &a, const Card &b, const Card &led_card, Suit trump){
+  //if card b is the led suit and a isnt trump, true
+  //if card b is led suit and a is trump, false
+  //if card b is trump and card a is trump, if rank b > a, true
+  //if neither led suit and neither trump, false since they're both automiatic losers:: implemented in the final return 0
+
+  //i didn't wanna have 4 conditions in 1 if statement because it looked dumb and bad so 
+  //my thought process is to return 0 at the end that way if all of the rest of the conditions
+  //are unmet for any of the if statements then it just isn't true becaus they're both losers
   Suit led_suit = led_card.get_suit();
 
   Rank br = b.get_rank();
