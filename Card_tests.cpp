@@ -4,6 +4,7 @@
 #include "unit_test_framework.h"
 #include <iostream>
 #include <cassert>
+#include <fstream>
 
 using namespace std;
 
@@ -129,7 +130,7 @@ TEST(suit_next){
 
 Suit suit = SPADES;
 
-ASSERT_EQUAL(Suit_next(suit), HEARTS);
+ASSERT_EQUAL(Suit_next(suit), CLUBS);
 
 }
 
@@ -137,11 +138,30 @@ TEST(is_equal_to){
 
 Card one(NINE, HEARTS);
 
-Card two(NINE, DIAMONDS);
+Card two(NINE, HEARTS);
 
-ASSERT_EQUAL((one == two), 1);
+Card three(NINE, DIAMONDS);
+
+assert(one == two);
+
+assert((one == three) == 0);
 
 }
+
+TEST(not_equal){
+
+Card one(NINE, DIAMONDS);
+
+Card two(TEN, DIAMONDS);
+
+Card three(NINE, HEARTS);
+
+assert(one != two);
+
+assert(one != three);
+
+}
+
 
 TEST(greater_equal_1){
 
@@ -172,5 +192,61 @@ Card two(JACK, DIAMONDS);
 ASSERT_EQUAL((two > one), 1);
 
 }
+
+TEST(less_one){
+
+Card one(JACK, HEARTS);
+
+Card two(KING, SPADES);
+
+Card led(TEN, CLUBS);
+
+Suit trump = DIAMONDS;
+
+ASSERT_EQUAL(Card_less(two, one, led, trump), 1);
+
+
+}
+
+TEST(less_hand){
+
+Card led(JACK, HEARTS);
+Card two(JACK, SPADES);
+Card three(NINE, DIAMONDS);
+Card four(TEN, DIAMONDS);
+
+Suit trump_suit = DIAMONDS;
+
+assert(Card_less(two, led, led, trump_suit));
+assert(Card_less(three, led, led, trump_suit));
+assert(Card_less(four, led, led, trump_suit));
+}
+
+TEST(operator_output){
+
+Card one(NINE, DIAMONDS);
+ostringstream os;
+operator<<(os, one);
+
+ostringstream os1("Nine of Diamonds");
+
+string test = os.str();
+string test1 = os1.str();
+
+ASSERT_EQUAL(test, test1);
+}
+
+TEST(test_insert){
+
+string test("Nine of Diamonds");
+istringstream test1;
+test1 >> test;
+
+Card one;
+operator>>(test1, one);
+
+ASSERT_EQUAL(one, Card(NINE, DIAMONDS));
+}
+
 
 TEST_MAIN()
