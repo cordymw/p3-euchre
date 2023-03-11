@@ -365,4 +365,37 @@ TEST(test_add_discard_upcard_is_lowest)
     delete Obama;
 }
 
+TEST(test_more_make_trump)
+{
+    Player* const a = Player_factory("a", "Simple");
+
+    Suit ou = SPADES;
+    a->add_card(Card(KING, SPADES));
+    a->add_card(Card(QUEEN, SPADES));
+    a->add_card(Card(KING, CLUBS));
+    a->add_card(Card(QUEEN, CLUBS));
+    a->add_card(Card(KING, HEARTS));
+
+    ASSERT_TRUE(a->make_trump(Card(NINE, SPADES), 1, 1, ou));
+    ASSERT_TRUE(a->make_trump(Card(NINE, SPADES), 0, 1, ou));
+    ASSERT_TRUE(a->make_trump(Card(NINE, SPADES), 0, 1, ou));
+
+    delete a;
+}
+
+TEST(test_make_trump_as_dealer){
+    Player* const a = Player_factory("a", "Simple");
+
+    Suit ou = HEARTS;
+    a->add_card(Card(KING, SPADES));
+    a->add_card(Card(QUEEN, SPADES));
+    a->add_card(Card(KING, CLUBS));
+    a->add_card(Card(QUEEN, CLUBS));
+    a->add_card(Card(KING, HEARTS));
+
+    ASSERT_TRUE(a->make_trump(Card(NINE, DIAMONDS), 1, 2, ou));
+
+    delete a;
+}
+
 TEST_MAIN()
