@@ -251,26 +251,13 @@ Card low = hand[index];
   //  The card is removed from the player's hand.
 
 
-
-  //strat:
-  // If a Simple Player can follow suit, they play the 
-  // highest card that follows suit. Otherwise, they play 
-  // the lowest card in their hand.
-
-  Card play_card(const Card &led_card, Suit trump){
-    assert(hand.size() >= 1);
-
-    int index = 0;
-    int maxrank = 0;
-    int minrank = 12;
-    bool followed = 0;
-
-
-    //follow suit code
-    for(int i = 0; i < hand.size(); ++i){
+int can_follow_normal(int &index, int &maxrank, bool &followed, Card led_card, Suit trump){
+  
+  for(int i = 0; i < hand.size(); ++i){
 
       if((hand[i].get_rank() >= maxrank) && 
       (hand[i].get_suit() == led_card.get_suit()) && 
+      //change: from 0 to 1 on line 275
       (hand[i].is_left_bower(trump) == 0)){
 
         index = i;
@@ -278,11 +265,14 @@ Card low = hand[index];
         followed = 1;
       }
     }
+  return index;
+}
 
-    //if led suit is also trump
-    if((led_card.get_suit() == trump) || led_card.is_left_bower(trump)){
-
-      //general cards
+//this is for if the player can follow suit
+int can_follow_led_equal_trump(int &index, int &maxrank, bool &followed, Card led_card, Suit trump){
+ 
+ 
+//general cards
       for(int i = 0; i < hand.size(); ++i){
 
         if((hand[i].get_suit() == trump) && (hand[i].get_rank() > maxrank)){
@@ -311,40 +301,25 @@ Card low = hand[index];
           followed = 1;
         }
       }
-    }
+ 
+ 
+  return index;
+}
+
+//undo 1
+//undo stamp 2
+//undo stamp3
 
 
 
-  //if player can't follow suit
 
 
-  int count1 = 0;
-  //if the led suit isn't the trump suit
-  if((led_card.get_suit() != trump) && !followed){
+//this is for if the player cannot follow suit
+int cannot_follow(int &index, int &minrank, bool &followed, Card led_card, Suit trump){
+  
+for(int i = 0; i < hand.size(); ++i){
 
-
-
-
-    for(int i = 0; i < hand.size(); ++i){
-
-      if((hand[i].get_suit() != led_card.get_suit()) || hand[i].is_left_bower(trump)){
-
-        ++count1;
-      }
-
-    }
-
-
-  //if all of the cards in players hand
-  //are cards not same suit as led suit,
-  //AND aren't trump,
-  //then find the minimum rank
-
-    for(int i = 0; i < hand.size(); ++i){
-
-      if((count1 == hand.size()) && 
-      
-      (hand[i].get_suit() != trump) && 
+      if((hand[i].get_suit() != trump) && 
 
       (hand[i].get_rank() <= minrank) && 
 
@@ -353,47 +328,13 @@ Card low = hand[index];
 
         minrank = hand[i].get_rank();
         index = i;
-      }
-    
+      } 
   }
+  return index;
+}
 
 
-  int count2 = 0;
-  for(int i = 0; i < hand.size(); ++i){
-
-    if((hand[i].get_suit() == trump) || (hand[i].is_left_bower(trump))){
-
-      ++count2;
-    }
-  }
-
-  //if all cards in hand ARE trump,
-  //and led suit isn't trump
-
-
-
-    for(int i = 0; i < hand.size(); ++i){
-
-      if(
-        (count2 == hand.size()) &&
-
-        (hand[i].get_rank() <= minrank) && 
-      
-        (hand[i].get_rank() != 9)){
-
-        index = i;
-        minrank = hand[i].get_rank();
-      }
-    }
-  }
-
-
-maxrank = 0;
-minrank = 12;
-//if led suit IS trump (makes things a lot easier)
-if((led_card.get_suit() == trump) || led_card.is_left_bower(trump)){
-
-
+int led_is_trump_follow(int &index, int &maxrank, int &minrank, bool &followed, Card led_card, Suit trump){
 
   for(int i = 0; i < hand.size(); ++i){
 
@@ -434,8 +375,7 @@ if((led_card.get_suit() == trump) || led_card.is_left_bower(trump)){
     }
 
   }
-  //if all of the cards in players hand
-  //aren't trump/led suit
+
   minrank = 12;
 
     for(int i = 0; i < hand.size(); ++i){
@@ -458,6 +398,110 @@ if((led_card.get_suit() == trump) || led_card.is_left_bower(trump)){
         minrank = hand[i].get_rank();
       }
     }
+
+  return index;
+}
+
+
+// int led_is_trump_no_follow(int &index, int &maxrank, int &minrank, bool &followed, Card led_card, Suit trump){
+
+// }
+  //strat:
+  // If a Simple Player can follow suit, they play the 
+  // highest card that follows suit. Otherwise, they play 
+  // the lowest card in their hand.
+
+  Card play_card(const Card &led_card, Suit trump){
+    assert(hand.size() >= 1);
+
+    int index = 0;
+    int maxrank = 0;
+    int minrank = 12;
+    bool followed = 0;
+
+    //follow suit code
+    index = can_follow_normal(index, maxrank, followed, led_card,trump);
+
+
+    //if led suit is also trump
+    if((led_card.get_suit() == trump) || led_card.is_left_bower(trump)){
+
+      index = can_follow_led_equal_trump(index, maxrank, followed, led_card, trump);
+
+    }
+
+  //if player can't follow suit
+
+
+  int count1 = 0;
+  //if the led suit isn't the trump suit
+  if((led_card.get_suit() != trump) && !followed){
+
+
+    for(int i = 0; i < hand.size(); ++i){
+
+      if((hand[i].get_suit() != led_card.get_suit()) || hand[i].is_left_bower(trump)){
+
+        ++count1;
+      }
+
+    }
+
+
+  //if all of the cards in players hand
+  //are cards not same suit as led suit,
+  //AND aren't trump,
+  //then find the minimum rank
+
+  //if count1 = hand size{
+    //call the can't follow suit
+  //}
+
+  if(count1 == hand.size()){
+    index = cannot_follow(index, minrank, followed, led_card, trump);
+  }
+    
+
+
+  int count2 = 0;
+  for(int i = 0; i < hand.size(); ++i){
+
+    if((hand[i].get_suit() == trump) || (hand[i].is_left_bower(trump))){
+
+      ++count2;
+    }
+  }
+
+  //if all cards in hand ARE trump,
+  //and led suit isn't trump
+    for(int i = 0; i < hand.size(); ++i){
+
+      if(
+        (count2 == hand.size()) &&
+
+        (hand[i].get_rank() <= minrank) && 
+      
+        (hand[i].get_rank() != 9)){
+
+        index = i;
+        minrank = hand[i].get_rank();
+      }
+    }
+  }
+
+
+
+maxrank = 0;
+minrank = 12;
+//if led suit IS trump (makes things a lot easier)
+if((led_card.get_suit() == trump) || led_card.is_left_bower(trump)){
+
+index = led_is_trump_follow(index, maxrank, minrank, followed, led_card, trump);
+
+  
+  //if all of the cards in players hand
+  //aren't trump/led suit
+  
 }
 
 
