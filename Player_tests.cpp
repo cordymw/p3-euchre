@@ -442,4 +442,26 @@ TEST(test_play_cards_in_correct_order)
     ASSERT_EQUAL(played, Card(KING, CLUBS));
 }
 
+TEST(test_lead_cards_in_correct_order)
+{
+    Player* const a = Player_factory("a", "Simple");
+
+    a->add_card(Card(KING, SPADES)); 
+    a->add_card(Card(QUEEN, SPADES)); 
+    a->add_card(Card(NINE, CLUBS));
+    a->add_card(Card(TEN, HEARTS)); 
+    a->add_card(Card(KING, HEARTS)); 
+    
+    Card led = a->lead_card(SPADES);
+    ASSERT_EQUAL(led, Card(KING, HEARTS));
+    Card led = a->lead_card(SPADES);
+    ASSERT_EQUAL(led, Card(TEN, HEARTS));
+    Card led = a->lead_card(SPADES);
+    ASSERT_EQUAL(led, Card(NINE, CLUBS));
+    Card led = a->lead_card(SPADES);
+    ASSERT_EQUAL(led, Card(KING, SPADES));
+    Card led = a->lead_card(SPADES);
+    ASSERT_EQUAL(led, Card(QUEEN, SPADES));
+}
+
 TEST_MAIN()
