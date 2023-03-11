@@ -24,6 +24,18 @@ class Game
         void play_trick();//identified
         void set_up_card();//identified
         void deal();//identified
+        void scoring1(const vector<Player*> p, int &leader_index, int &temp_t1,  int &temp_t2, 
+        Card led, Card two, Card three, Card four, Suit trump_suit);
+
+        void scoring2(const vector<Player*> p, int &leader_index, int &temp_t1,  int &temp_t2, 
+        Card led, Card two, Card three, Card four, Suit trump_suit);
+
+        void scoring3(const vector<Player*> p, int &leader_index, int &temp_t1,  int &temp_t2, 
+        Card led, Card two, Card three, Card four, Suit trump_suit);
+
+        void scoring4(const vector<Player*> p, int &leader_index, int &temp_t1,  int &temp_t2, 
+        Card led, Card two, Card three, Card four, Suit trump_suit);
+
         Player * maker;//identified
 
     private:
@@ -401,10 +413,50 @@ void Game::play_trick()
 
   //WHO WON TRICK
 
+  if(players[leader_index] == players[0]){
 
-  //if leader was player[0]
-if(players[leader_index] == players[0]){
-  //they are on team one
+    scoring1(players, leader_index, temp_t1, temp_t2, 
+    led, two, three, four, trump_suit);
+
+  }
+  
+
+
+  //if leader is player[1]
+else if(players[leader_index] == players[1]){
+
+  scoring2(players, leader_index, temp_t1, temp_t2, 
+    led, two, three, four, trump_suit);
+
+}
+
+
+else if(players[leader_index] == players[2]){
+    //player[2] was leader
+  scoring3(players, leader_index, temp_t1, temp_t2, 
+    led, two, three, four, trump_suit);
+    
+  }
+
+
+  //if leader = player[3]
+//if(players[leader_index] == players[3])
+else{
+
+    scoring4(players, leader_index, temp_t1, temp_t2, 
+    led, two, three, four, trump_suit);
+
+  }
+
+
+
+
+//end of play trick
+}
+
+void Game::scoring1(const vector<Player*> p, int &leader_index, int &temp_t1,  int &temp_t2, 
+        Card led, Card two, Card three, Card four, Suit trump_suit){
+
 
   if(Card_less(two, led, led, trump_suit) && 
   Card_less(four, led, led, trump_suit) && 
@@ -451,12 +503,10 @@ if(players[leader_index] == players[0]){
   }
   }
 
+void Game::scoring2(const vector<Player*> p, int &leader_index, int &temp_t1,  int &temp_t2, 
+        Card led, Card two, Card three, Card four, Suit trump_suit){
 
-  //if leader is player[1]
-else if(players[leader_index] == players[1]){
-//bro is on team 2
-
-  if(Card_less(two, led, led, trump_suit) && 
+          if(Card_less(two, led, led, trump_suit) && 
   Card_less(four, led, led, trump_suit) && 
   Card_less(three, led, led, trump_suit)){
 
@@ -496,11 +546,10 @@ else if(players[leader_index] == players[1]){
   }
 }
 
+void Game::scoring3(const vector<Player*> p, int &leader_index, int &temp_t1,  int &temp_t2, 
+        Card led, Card two, Card three, Card four, Suit trump_suit){
 
-else if(players[leader_index] == players[2]){
-    //player[2] was leader
-
-    if(Card_less(two, led, led, trump_suit) && 
+          if(Card_less(two, led, led, trump_suit) && 
     Card_less(four, led, led, trump_suit) && 
     Card_less(three, led, led, trump_suit)){
 
@@ -540,14 +589,13 @@ else if(players[leader_index] == players[2]){
     cout << endl;
     leader_index = 1;
   }
-  }
 
+        }
 
-  //if leader = player[3]
-//if(players[leader_index] == players[3])
-else{
+void Game::scoring4(const vector<Player*> p, int &leader_index, int &temp_t1,  int &temp_t2, 
+        Card led, Card two, Card three, Card four, Suit trump_suit){
 
-    if(Card_less(two, led, led, trump_suit) && 
+if(Card_less(two, led, led, trump_suit) && 
     Card_less(four, led, led, trump_suit) && 
     Card_less(three, led, led, trump_suit)){
 
@@ -585,13 +633,15 @@ else{
     cout << endl;
     leader_index = 2;
   }
-  }
+        }
 
 
 
 
-//end of play trick
-}
+
+
+
+
 
 
 
