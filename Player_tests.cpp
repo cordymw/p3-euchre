@@ -398,4 +398,48 @@ TEST(test_make_trump_as_dealer){
     delete a;
 }
 
+TEST(test_operator_overload)
+{
+    Player* const a = Player_factory("a", "Simple");
+    stringstream os;
+    stringstream correct;
+    os << *a;
+    correct << "a";
+    ASSERT_EQUAL(os.str(), correct.str());
+
+    delete a;
+}
+
+TEST(test_player_factory)
+{
+    Player* const a = Player_factory("a", "Simple");
+
+    ASSERT_EQUAL(typeid(*a), typeid(Player));
+    ASSERT_EQUAL(a->get_name(), "a");
+
+    delete a;
+}
+
+TEST(test_play_cards_in_correct_order)
+{
+    Player* const a = Player_factory("a", "Simple");
+
+    a->add_card(Card(KING, SPADES)); 
+    a->add_card(Card(QUEEN, SPADES)); 
+    a->add_card(Card(KING, CLUBS));
+    a->add_card(Card(TEN, HEARTS)); 
+    a->add_card(Card(KING, HEARTS)); 
+
+    Card played = a->play_card(Card(NINE, SPADES), DIAMONDS);
+    ASSERT_EQUAL(played, Card(KING, SPADES));
+    Card played = a->play_card(Card(NINE, DIAMONDS), DIAMONDS);
+    ASSERT_EQUAL(played, Card(TEN, HEARTS));
+    Card played = a->play_card(Card(NINE, HEARTS), DIAMONDS);
+    ASSERT_EQUAL(played, Card(KING, HEARTS));
+    Card played = a->play_card(Card(NINE, HEARTS), DIAMONDS);
+    ASSERT_EQUAL(played, Card(QUEEN, SPADES));
+    Card played = a->play_card(Card(NINE, DIAMONDS), DIAMONDS);
+    ASSERT_EQUAL(played, Card(KING, CLUBS));
+}
+
 TEST_MAIN()
